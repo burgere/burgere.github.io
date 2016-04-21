@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Profile Page</title>
+<link rel="stylesheet" href="css/foundation.css" />
+<link rel="stylesheet" href="css/portfolio_styles.css" />
+ <script src="js/vendor/modernizr.js"></script>
+<script src="jquery-ui-1.9.2.custom.min.js"></script> 
+<link rel="stylesheet" href="jquery-ui-1.9.2.css" />  
+<script type = "text/javascript">
+	
+</script>
+</head>
+<body>
+	<div class="row">
+      <div class="large-4 large-push-8 columns">
+        <div class="social_networks"><a href="https://twitter.com/TheBurgE3" target="_blank"><img src="img/download.jpg" alt="tw" /></a><a href="https://www.linkedin.com/pub/eric-burger/63/4b6/179" target="_blank"><img src="img/in.png" alt="in" /></a></div>
+      </div>
+    </div>
+	
+
+	<div class="row">
+	<div class="large-12 columns">
+	<div class="sticky">
+	<nav class="top-bar" data-topbar>
+		 	
+		  <section class="top-bar-section">
+			<!-- Right Nav Section -->
+			  <!-- <li class="active"><a href="#">Right Button Active</a></li> -->
+			<ul class="left">  
+			<li class="active hide-for-small"><a href ="./EBHome.html" style="font-size:17px;">Eric Burger - Fun with Making Things</a></li>
+			<li class="active show-for-small"><a href ="#" style="font-size:17px;">Eric Burger - Fun with Making Things</a></li>			
+			</ul>
+			<!-- Left Nav Section -->
+			<ul class="right">
+			  <li class="show-for-small"><a href="./EBHome.html">HOME</a></li>
+			  <li><a href="./about.html">ABOUT</a></li>
+			  <li><a href="./blog.html">BLOG</a></li>
+			  <li class="has-dropdown active"><a href="./projects.html">PROJECTS</a>
+				<ul class="dropdown">
+					<li class="show-for-small"><a href="./projects.html">Featured Projects</a></li>
+					<li><a href="./design.html">Design</a></li>
+					<li><a href="./programming.html">Programming</a></li>
+					<li><a href="./misc.html">Miscellaneous</a></li>
+				</ul>	
+			  </li>
+			  <li><a href="./contact.html">CONTACT ME</a></li> 
+			</ul>
+		  </section>
+    </nav>
+	</div>
+	</div>
+	</div>
+	
+	<div class="row">
+	<div class="large-12 columns">
+	<h2>Projects</h2>
+	</div></div>
+	
+	<!-- start tabs -->
+	<div class="row">
+	<div class="large-10 push-1 columns">
+		<dl class="tabs" data-tab>
+			<dd class="active"><a href="#panel2-1">Featured</a></dd>
+			<dd><a href="#panel2-2">Design</a></dd>
+			<dd><a href="#panel2-3">Programming</a></dd>
+			<dd><a href="#panel2-4">Miscellaneous</a></dd>
+		</dl>
+		
+		<div class="tabs-content">
+		<div class="content active" id="panel2-1">
+		<ul class="medium-block-grid-1 projects_list">
+			<a href="#" data-reveal-id="one"><li class="th"><h4>This Website!</h4>
+			<img class="hide-for-small" src="img/contact.png" alt="one" />
+			</li></a>
+			
+			<a href="#" data-reveal-id="two"><li class="th"><h4>North Lawndale Greening Committee</h4>
+			<img class="hide-for-small" src="img/2.PNG" alt="two" />
+			</li></a>
+		</ul>
+		
+	</div> <!-- end tab 1 -->
+	
+		<div class="content" id="panel2-2">
+		<p><a class="link" href="./design.html" style="font-size:75%;">SEE ALL DESIGN PROJECTS</a></p>
+		<ul class="medium-block-grid-1 projects_list">
+			<a href="#" data-reveal-id="two"><li class="th"><h4>North Lawndale Greening Committee</h4>
+			<img class="hide-for-small" src="img/2.PNG" alt="two" />
+			</li></a>
+			
+			<a href="#" data-reveal-id="three"><li class="th"><h4>DePaul Online</h4>
+			<img class="hide-for-small" src="img/dpo.JPG" alt="two" />
+			</li></a>
+		</ul>
+		  </div><!-- end tab 2 -->
+		  <div class="content" id="panel2-3">
+			<p><a class="link" href="./programming.html" style="font-size:75%;">SEE ALL PROGRAMMING PROJECTS</a></p>
+			<ul class="medium-block-grid-1 projects_list">
+			<a href="#" data-reveal-id="prog1"><li class="th"><h4>Directory Traversal & Recursion</h4>
+			<img class="hide-for-small" src="img/recursion2.JPG" alt="two" />
+			</li></a>
+			
+			<a href="#" data-reveal-id="prog2"><li class="th"><h4>Tax Calculator App</h4>
+			<img class="hide-for-small" src="img/taxscreen.JPG" alt="two" />
+			</li></a>
+		</ul>
+		  </div><!-- end tab 3 -->
+		  <div class="content" id="panel2-4">
+			<p>No random projects yet. Check back soon.</p>
+		  </div><!-- end tab 4 -->
+  <!-- end all tabs -->
+	
+	</div> 
+	
+	</div>
+	</div>
+
+	<!-- Pop-ups -->
+	<div id="one" class="reveal-modal" data-reveal>
+		<h4>This Website!</h4>
+		<p>Yes! This website is a project! It's been really fun to build. It's a refresher for me to experiment further with HTML and CSS (We'll see if we can sneak some Javascript in there). <a href = "./design.html#panel1design" style="color:#0078a0;">Read More...</a></p>
+		<img src="img/contact.png" alt="one" />
+		<a class="close-reveal-modal">&#215;</a>
+		</div>
+		
+		<div id="two" class="reveal-modal" data-reveal>
+		<h4>North Lawndale Greening Committee</h4>
+		<p> This project involved experimentation with WordPress plugins and using advanced features of WordPress. It was one of my first experiences with the process of shipping a product to a client. <a href = "./design.html#panel3design" style="color:#0078a0;">Read More...</a></p>
+		<img src="img/2.PNG" alt="two" />
+		<a class="close-reveal-modal">&#215;</a>
+		</div>
+		
+		<div id="three" class="reveal-modal" data-reveal>
+		<h4>DePaul Online</h4>
+		<p>This project was an application design that targeted the needs of the DePaul CDM (College of Computing and Digital Media) student userbase.<a href = "./design.html#panel2design" style="color:#0078a0;">Read More...</a></p>
+		<img src="img/dpo.JPG" alt="two" />
+		<a class="close-reveal-modal">&#215;</a>
+		</div>
+		
+		<div id="prog1" class="reveal-modal" data-reveal>
+		<h4>Directory Traversal & Recursion</h4>
+		<p>These projects exemplify my learning process of recursion and feature various implementations of the concept.<a href = "./programming.html#panel1prog" style="color:#0078a0;">Read More...</a></p>
+		<img src="img/recursion2.JPG" alt="two" />
+		<a class="close-reveal-modal">&#215;</a>
+		</div>
+		
+		<div id="prog2" class="reveal-modal" data-reveal>
+		<h4>Tax Calculator App</h4>
+		<p>This simple application uses jQuery to dynamically populate textfields and simplify formulaic calculations.<a href = "./programming.html#panel3prog" style="color:#0078a0;">Read More...</a></p>
+		<img src="img/taxscreen.JPG" alt="two" />
+		<a class="close-reveal-modal">&#215;</a>
+		</div>
+	
+	<div class="row">
+		<div id = "footer" class="large-12 columns">
+		<div class="social_networks"><a href="https://twitter.com/TheBurgE3" target="_blank"><img src="img/twitter.png" alt="twitter" /></a></div>
+		<div class="social_networks"><a href="https://www.linkedin.com/pub/eric-burger/63/4b6/179" target="_blank"><img src="img/in.png" alt="in" /></a></div>
+			<div class="large-5 push-4 columns">
+			<ul class="inline-list" id="footer_links">
+				<li><a href="./EBHome.html">Home</a></li>
+				<li><a href="./about.html">About</a></li>
+				<li><a href="./blog.html">Blog</a></li>
+				<li><a href="./projects/html">Projects</a></li>
+				<li><a href="./contact.html">Contact</a></li>
+			</ul>
+			<p><div style="font-size:75%">Eric Burger | eric.burger@comcast.net | @TheBurgE3<div></p>
+		</div>
+	</div>
+	<!-- end Pop-ups -->
+	
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+</body>
+</html>

@@ -1,10 +1,6 @@
----
-layout: default
----
-
 <div class="home">
 
-  <div class="posts">
+<!--   <div class="posts">
     {% for post in paginator.posts %}
       <div class="post">
         <a href="{{ post.url | prepend: site.baseurl }}" class="post-link">
@@ -14,9 +10,130 @@ layout: default
         </a>
       </div>
     {% endfor %}
-  </div>
+  </div> -->
 
-  {% include pagination.html %}
+  <title>Profile Page</title>
+<link rel="stylesheet" href="css/foundation.css" />
+<link rel="stylesheet" href="css/portfolio_styles.css" />
+ <script src="js/vendor/modernizr.js"></script>
+<script src="jquery-ui-1.9.2.custom.min.js"></script> 
+<link rel="stylesheet" href="jquery-ui-1.9.2.css" />  
+<script type = "text/javascript">
+  
+</script>
+</head>
+<body>
+  <div class="row">
+      <div class="large-4 large-push-8 columns">
+        <div class="social_networks"><a href="https://twitter.com/TheBurgE3" target="_blank"><img src="img/download.jpg" alt="tw" /></a><a href="https://www.linkedin.com/pub/eric-burger/63/4b6/179" target="_blank"><img src="img/in.png" alt="in" /></a></div>
+      </div>
+    </div>
+  
+
+  <div class="row">
+  <div class="large-12 columns">
+  <div class="sticky">
+  <nav class="top-bar" data-topbar>
+      
+      <section class="top-bar-section">
+      <!-- Right Nav Section -->
+        <!-- <li class="active"><a href="#">Right Button Active</a></li> -->
+      <ul class="left">  
+      <li class="active hide-for-small"><a href ="./EBHome.html" style="font-size:17px;">Eric Burger - Fun with Making Things</a></li>
+      <li class="active show-for-small"><a href ="#" style="font-size:17px;">Eric Burger - Fun with Making Things</a></li>      
+      </ul>
+      <!-- Left Nav Section -->
+      <ul class="right">
+        <li class="show-for-small"><a href="./EBHome.html">HOME</a></li>
+        <li><a href="./about.html">ABOUT</a></li>
+        <li><a href="./blog.html">BLOG</a></li>
+        <li class="has-dropdown"><a href="./projects.html">PROJECTS</a>
+        <ul class="dropdown">
+          <li class="show-for-small"><a href="./projects.html">Featured Projects</a></li>
+          <li><a href="./design.html">Design</a></li>
+          <li><a href="./programming.html">Programming</a></li>
+          <li><a href="./misc.html">Miscellaneous</a></li>
+        </ul> 
+        </li>
+        <li><a href="./contact.html">CONTACT ME</a></li> 
+      </ul>
+      </section>
+    </nav>
+  </div>
+  </div>
+  </div>
+  
+  <div class="row">
+    <div class="large-12 columns">
+      <ul class="example-orbit" data-orbit>
+        <li>
+        <a href="./contact.html"><img src="img/contact.png" alt="slide 1" /></a>
+        <div class="orbit-caption">
+          Contact me through LinkedIn, email, or Twitter. <a class="small button" href = "./contact.html"> Contact Info </a>
+        </div>
+        </li>
+        <li>
+        <a href="./projects.html"><img src="img/2front.png" alt="slide 2" /></a>
+        <div class="orbit-caption">
+          View my current works in progress and finished projects.
+          <a class="small button" href="./projects.html"> Read More </a>
+        </div>
+        </li>
+        <li>
+        <a href="./programming.html"><img src="img/funwithjquery.png" alt="slide 3" /></a>
+        <div class="orbit-caption">
+            Fun with JQuery and other script-related things.
+            <a class="small button" href="./programming.html"> Read More </a>
+        </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="large-6 columns">
+    <div class="panel" data-equalizer-watch>
+    <p><h3>Hi, I'm Eric.</h3></p>
+    <p>This place showcases my past projects, my learning experiences, and my passion for building cool things. Take a look at the 'About' section to learn more about me, or check out some of the stuff I've worked on/am working on at the Projects page.</p>
+      <div class="row">
+        <div class="small-12 push-1 columns">
+        <img src="img/me.jpg" alt="me" />
+        </div>
+      </div>
+    </div>
+    </div>
+    
+    <!-- Twitter timeline -->
+    <div class="large-6 columns">
+    <a class="twitter-timeline" href="https://twitter.com/TheBurgE3" data-widget-id="470343012673785856">Tweets by @TheBurgE3</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+    
+  </div>
+  
+  <div class="row">
+    <div id = "footer" class="large-12 columns">
+    <div class="social_networks"><a href="https://twitter.com/TheBurgE3" target="_blank"><img src="img/twitter.png" alt="twitter" /></a></div>
+    <div class="social_networks"><a href="https://www.linkedin.com/pub/eric-burger/63/4b6/179" target="_blank"><img src="img/in.png" alt="in" /></a></div>
+      <div class="large-5 push-4 columns">
+      <ul class="inline-list" id="footer_links">
+        <li><a href="./EBHome.html">Home</a></li>
+        <li><a href="./about.html">About</a></li>
+        <li><a href="./blog.html">Blog</a></li>
+        <li><a href="./projects.html">Projects</a></li>
+        <li><a href="./contact.html">Contact</a></li>
+      </ul>
+      <p><div style="font-size:75%">Eric Burger | eric.burger@comcast.net | @TheBurgE3<div></p>
+    </div>
+  </div>
+  
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+
+<!--   {% include pagination.html %} -->
 
   <!--<p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>-->
 </div>
