@@ -43,3 +43,7 @@
   height:100px;
   width: 100px;
 }
+
+#twitter-widget-0.twitter-timeline.twitter-timeline-rendered {
+	height: 700px !important;	
+}
