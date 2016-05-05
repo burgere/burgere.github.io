@@ -1,0 +1,30 @@
+video {
+	width: 100%;
+	height: 100%;
+}
+
+.portfolio-link > img {
+	width: 100%;
+}
+
+header {
+	background-image: none;
+}
+
+.tooltip-hover {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+aside.clients img {
+	max-height: 70px;
+}
+
+.resume-img {
+	height: 100%;
+	width: 100%;
+}
+
+.profile-img {
+	max-height: 300px;
+}

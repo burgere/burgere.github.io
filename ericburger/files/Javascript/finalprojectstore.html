@@ -1,0 +1,242 @@
+/*
+This was a mock webstore project for a scripting class I took. The assignment was created using a web framework that my instructor built (web2py). It does not function without being launched through web2py, but all the Javascript and HTML code that I wrote for the storefront assignment is shown here.
+*/
+{{extend 'layout.html'}} /* This was a web2py function*/
+
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script> /* The assignment used Stripe to simulate credit card authentication */
+
+    <form action="" id="search-form">
+    <fieldset>
+        <input type="text" id="search" name="search" />
+        <input type="button" id="search-submit" value="Search..."/>
+    </fieldset>
+	</form>
+	
+	<table>
+        
+        <tr><td id="search-results"></td>
+        </tr>
+	</table>
+	
+	<table width="100%">
+		<tr><td id="shop-window"></td>
+            <td id="shop-cart">
+            <h4>Shopping Cart</h4>
+            <div id="cart"></div>
+            <div id="cart-total"></div>
+		</td></tr>
+	</table>
+	
+<div id="checkout" style="float:right;">
+	<h2>Checkout</h2>
+	<h4>Credit Card Information:</h4>
+	<form id="CardForm">
+		<table>
+			<tr>
+				<td><label>Name</label></td><td><input id="CardName" /></td>
+			</tr>
+			<tr>
+				<td><label>Number</label></td><td><input id="CardNumber" /></td>
+			</tr>
+			<tr>
+				<td><label>Expiration Date</label></td><td><input id="CardExpiration" /></td>
+			</tr>
+			<tr>
+				<td><label>CVC Code</label></td><td><input id="CardCVC" /></td>
+			</tr>
+			
+			<tr>
+				<td></td><td><input type="submit" class="btn" /></td>
+			</tr>
+		</table>
+	</form>
+</div>
+	
+<h4>Drag Your Items Here!</h4>
+ <img id="bin" src="http://icons.iconarchive.com/icons/iconshock/ecommerce/256/empty-shopping-cart-icon.png" width="200px" style="float:left;"/>
+	<script>
+	var cart = {};
+		var products = [
+                {code:'0001',name:'Star Wars:Battlefront III',price:60,description:"The best game ever",image:'http://stickskills.com/omega/wp-content/uploads/2013/05/battlefront-3.jpg'},
+                {code:'0002',name:'Dota 2',price:30,description:"The other best game ever",image:'http://upload.wikimedia.org/wikipedia/en/0/08/DotA2.jpg'},
+                {code:'0003',name:'Super Smash Brothers',price:30,description:"The third best game ever",image:'http://upload.wikimedia.org/wikipedia/en/4/42/Supersmashbox.jpg'},
+                {code:'0004',name:'Left 4 Dead',price:20,description:"Zombies",image:'http://images.wikia.com/left4dead/images/7/7a/Left-4-dead-2-logo-wallpaper.jpg'}                      
+		 ]
+		     
+    var json = {
+    "product_database": {
+        "products": [
+			{
+            "code": "0005",
+            "name": "Team Fortress 2",
+            "price": "20",
+            "description": "Team-based combat",
+            "image": "http://1.bp.blogspot.com/-wc4K55FlTIc/T_3q-k2ZgNI/AAAAAAAAAJE/LlL3lYhptG0/s1600/tf2_big.jpg"
+        	},
+        	{
+            "code": "0006",
+            "name": "Bulletstorm",
+            "price": "20",
+            "description": "Action and creative dismemberment",
+            "image": "http://upload.wikimedia.org/wikipedia/en/9/9f/Bulletstorm.jpg"
+        	},
+        	{
+            "code": "0007",
+            "name": "Portal 2",
+            "price": "20",
+            "description": "FPS Puzzles",
+            "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQPf0Bv2-FD4CkgcRjqIXve0O9R2vhSzGwk7Oe_q0WC1f7FXffNIw"
+        	}    
+		]        
+	}    
+};
+
+	var total = 0;
+	
+    function myalert() {
+        //product.length = 0;
+		var isfound = false;
+		var product;
+		$.each(json.product_database.products, function(i, v) {
+			if (v.name == jQuery('#search').val()) {
+            	isfound = true;
+            
+            	product = {"code":v.code,"name":v.name,"price":v.price,"description":v.description,"image":v.image};    
+            	products[products.length] = product;
+                //alert(products.length);            
+            	return false;       
+    		}
+    	
+		});
+           
+    	if (!isfound) {
+    		alert("Not found!");
+    	}
+        //alert("adding product to array");
+        
+        jQuery('#search-results').append('<h2>'+product.name+' ($'+product.price+')</h2>');
+        jQuery('#search-results').append('<p>'+product.description+'</p>');
+        jQuery('#search-results').append('<img width="100px" class="product" src="'+product.image+'" product-code="'+product.code+'"/>');
+        jQuery('#search-results').append('<p><button onclick="add_to_cart(\''+product.code+'\')" class="btn">Add to Cart</button></p>');                
+        jQuery(function() {
+        	jQuery(".product").draggable({
+				appendTo: "body",
+				helper: "clone"
+			});
+            
+			jQuery( "#bin" ).droppable({ drop: function(e,u) {
+            	add_to_cart(u.draggable.attr('product-code'));
+				}
+			}); 
+});  
+        //alert(products.length);
+        //product_loop();
+    }
+    
+       jQuery('#search-submit').click(myalert);
+            	
+            	
+            function add_to_cart(code) {
+                if(!cart[code]) {
+                	cart[code]=1;
+                } 
+                else {
+                	cart[code]+=1;
+            	}
+                show_cart();
+            }
+            
+            function del_from_cart(code) {
+        	delete cart[code];
+        	show_cart();
+        }
+         
+	function show_cart() {  
+		var div = jQuery('#cart');
+		table = jQuery('<table/>');
+		div.html(table);
+		table = jQuery('#cart table');
+		var total = 0;
+		for(var i=0; i<products.length; i++) {
+			var product = products[i];
+			var quantity = cart[product.code];
+			if (quantity) {
+				total += product.price*quantity;
+				table.append('<tr><td><img width="20px" src="'+product.image+'" /></td><td>'+quantity+'</td>				<td>'+product.name+'</td><td>$'+product.price+'</td><td><i onclick="del_from_cart(\''+product.code+'\')" class="icon-remove"></i></td></tr>');
+			}
+		}
+		jQuery('#cart-total').html("Total: $"+total);
+	} 
+
+		function product_loop() {
+            //alert(products.length + "This is the products.length");
+			for(var i=0; i<products.length; i++) {				
+				var product = products[i];
+				jQuery('#shop-window').append('<h2>'+product.name+' ($'+product.price+')</h2>');
+                jQuery('#shop-window').append('<p>'+product.description+'</p>');
+                jQuery('#shop-window').append('<img width="100px" class="product" src="'+product.image+'" product-code="'+product.code+'" 		/>');
+                jQuery('#shop-window').append('<p><button onclick="add_to_cart(\''+product.code+'\')" class="btn">Add to Cart</button>				</p>');                
+                jQuery(function() {
+      				jQuery(".product").draggable({
+        				appendTo: "body",
+        				helper: "clone"
+      				});
+      
+         		jQuery( "#bin" ).droppable({ drop: function(e,u) {
+              			add_to_cart(u.draggable.attr('product-code'));
+          				}
+					}); 
+    			});
+			}
+		}
+		
+	product_loop();
+	
+	Stripe.setPublishableKey('pk_test_FPU2jGRwJN98JvqdQH71GFXt');
+	jQuery('#CardForm').submit(function () {
+		
+        //alert('submit function called');
+		
+		var expiration = jQuery('#CardExpiration').val().split("/");
+		
+        //alert(JSON.stringify(expiration));
+		
+		Stripe.card.createToken({
+		    number: $('#CardNumber').val(),
+		    cvc: $('#CardCVC').val(),
+		    exp_month: parseInt(expiration[0]),
+		    exp_year: parseInt(expiration[1]),
+		}, stripeResponseHandler);
+        //alert('submit function completed');
+		return false;
+		});
+	
+	function stripeResponseHandler(status, response) {
+		if (response.error) {
+	    	alert(response.error.message);
+	    } else {
+	     
+	        var token = response['id'];
+            //alert('token is ' + token);
+	        jQuery.post('/it238/default/callback',{'token':token,'cart':cart},serverResponse);
+			//talk to the server and make a payment with this token   
+	    }
+		
+	}
+		
+	function serverResponse(data, textStatus, jqXHR) {
+        //alert('Our server said: '+data);
+           alert('Payment accepted and transaction completed!');
+           clearCart();
+        }
+              
+
+	function clearCart() {
+            for(var i=0; i<products.length; i++) {
+				var product = products[i];
+               	 cart[product.code] = 0;               	                	
+            }
+        show_cart();	
+        }
+	
+	</script>

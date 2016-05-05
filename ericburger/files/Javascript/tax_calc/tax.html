@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="jquery.js"></script>
+<meta charset="utf-8">
+<title>Tax Computation</title>
+<style>
+	body {font-family:Calibri;}
+	#wrapper {margin:20px;}
+	button {padding-top:5px; padding-bottom:5px;}
+	
+</style>
+</head>
+<body>
+
+<div id="wrapper">
+<h2>Compute Your Taxes</h2>
+	Please Select Your Filing Status:
+	
+		<input type="radio" id="status-single" name="status" value="single" />Single
+		<input type="radio" id="status-married" name="status" value="married" />Married
+	 
+	<p>Enter Income: $<input id="income" /></p>
+	<p>Enter Credits: $<input id="credits" /></p>
+	<p>Enter Deductions: $<input id="deductions" /></p>
+	
+	<p><button id="compute">Compute Taxes</button></p>
+	<p>Your Tax Is: $<input id="computed_tax" /></p>
+	
+</div>
+	
+	<script>
+		
+	function process_tax() {
+		
+		var income = parseFloat(jQuery('#income').val());
+		var deduction = parseFloat(jQuery('#deductions').val());
+		var credit = parseFloat(jQuery('#credits').val());
+		income -= deduction;
+		
+		var tax;
+		var final_tax;
+			
+		if ((jQuery('input:radio[name=status]:checked').val()==="single")) {
+			
+			tax = do_single(income);
+		}
+		else if ((jQuery('input:radio[name=status]:checked').val()==="married")){
+			
+			tax = do_married(income);
+		}
+		
+		final_tax = tax - credit;
+		jQuery('#computed_tax').val(final_tax.toFixed(2));
+		
+		if (jQuery('#computed_tax').val() == "NaN") {
+			alert ("Check to make sure you have filled the form completely and in the correct fashion.")
+		}
+		
+			 
+	}
+	
+	function do_single(incm) {
+		
+		var rate;
+		var constant;
+		var lower_bound;
+		var tax_single;
+		
+		if (incm <= 8925) {
+			
+			rate = parseFloat(.10);
+			constant = parseFloat(0);
+			lower_bound = parseFloat(0);
+			
+		}
+		
+		else if (incm > 8925 && incm < 36250 ) {
+			rate = parseFloat(.15);
+			constant = parseFloat(892.50);
+			lower_bound = parseFloat(8295);
+			
+		}
+		
+		else if (incm > 36250 && incm < 87850 ) {
+			rate = parseFloat(.25);
+			constant = parseFloat(4991.25);
+			lower_bound = parseFloat(36250);
+	
+		}
+		
+		else if (incm > 87850 && incm < 183250 ) {
+			rate = parseFloat(.28);
+			constant = parseFloat(17891.25);
+			lower_bound = parseFloat(87850);
+			
+		}
+		
+		else if (incm > 183250 && incm < 398350 ) {
+			rate = parseFloat(.33);
+			constant = parseFloat(44603.25);
+			lower_bound = parseFloat(183250);
+			
+		}
+		
+		else if (incm > 398350 && incm < 400000 ) {
+			rate = parseFloat(.35);
+			constant = parseFloat(115586.25);
+			lower_bound = parseFloat(398350);
+			
+		}
+		
+		else if (incm > 400000 ) {
+			rate = parseFloat(.396);
+			constant = parseFloat(116163.75);
+			lower_bound = parseFloat(400000);
+			
+		}
+		
+		tax_single = calculate_tax(lower_bound, constant, rate, incm);
+		return tax_single;
+	}
+	
+	function do_married(incm) {
+		
+		var rate;
+		var constant;
+		var lower_bound;
+		var tax_married;
+		
+		if (incm < 17850) {
+			rate = parseFloat(.10);
+			constant = parseFloat(0);
+			lower_bound = parseFloat(0);
+			
+			}
+		
+		else if (incm > 17850 && incm < 72500) {
+			rate = parseFloat(.15);
+			constant = parseFloat(1785.00);
+			lower_bound = parseFloat(17850);
+			}
+		
+		else if (incm > 72500 && incm < 146400) {
+			rate = parseFloat(.25);
+			constant = parseFloat(9982.50);
+			lower_bound = parseFloat(72500);
+			}
+		
+		else if (incm > 146400 && incm < 223050) {
+			rate = parseFloat(.28);
+			constant = parseFloat(28457.50);
+			lower_bound = parseFloat(146400);
+			}
+		
+		else if (incm > 223050 && incm < 398350) {
+			rate = parseFloat(.33);
+			constant = parseFloat(49919.50);
+			lower_bound = parseFloat(223050);
+			}
+		
+		else if (incm > 398350 && incm < 450000) {
+			rate = parseFloat(.35);
+			constant = parseFloat(107768.00);
+			lower_bound = parseFloat(398350);
+			}
+		
+		else if (incm > 450000) {
+			rate = parseFloat(.396);
+			constant = parseFloat(125846.00);
+			lower_bound = parseFloat(450000);
+		}
+		
+		tax_married = calculate_tax(lower_bound, constant, rate, incm);
+		return tax_married;
+
+	}
+	
+
+	
+	function calculate_tax (low_bnd, tax_constant, tax_rate, tax_income) {
+		
+		var calculated = tax_constant + tax_rate * (tax_income - low_bnd);
+		
+		return calculated; 
+	}
+	
+		
+	jQuery('#compute').click(process_tax);
+
+	</script>
+
+</body>
+</html>
