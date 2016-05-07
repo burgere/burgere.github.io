@@ -28,3 +28,21 @@ aside.clients img {
 .profile-img {
 	max-height: 300px;
 }
+
+@media (max-width: 600px) {
+	#videoautoplay {
+		display: none;
+	}
+}
+
+@media (min-width: 600px) {
+	#no-videoautoplay {
+		display: none;
+	}
+}
+
+#videoautoplay {
+	height: 100%;
+	width: 100%;
+	margin-top: 50px;
+}
