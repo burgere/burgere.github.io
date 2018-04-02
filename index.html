@@ -1,138 +1,279 @@
-<div class="home">
+<!DOCTYPE html>
+<html lang="en">
 
-<!--   <div class="posts">
-    {% for post in paginator.posts %}
-      <div class="post">
-        <a href="{{ post.url | prepend: site.baseurl }}" class="post-link">
-          <p class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</p>
-          <h3 class="h2 post-title">{{ post.title }}</h3>
-          <p class="post-summary">{{ post.summary }}</p>
-        </a>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Eric Burger</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="vendor/devicons/css/devicons.min.css" rel="stylesheet">
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/resume.min.css" rel="stylesheet">
+    <link rel="icon" href="img/profile.png">
+
+  </head>
+
+  <body id="page-top">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">
+        <span class="d-block d-lg-none">Eric Burger</span>
+        <span class="d-none d-lg-block">
+          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile.png" style="height: 9rem" alt="">
+        </span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#experience">Experience</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#education">Education</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#skills">Skills</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#interests">Interests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#awards">Awards</a>
+          </li>
+        </ul>
       </div>
-    {% endfor %}
-  </div> -->
-
-  <title>Profile Page</title>
-<link rel="stylesheet" href="css/foundation.css" />
-<link rel="stylesheet" href="css/portfolio_styles.css" />
- <script src="js/vendor/modernizr.js"></script>
-<script src="jquery-ui-1.9.2.custom.min.js"></script> 
-<link rel="stylesheet" href="jquery-ui-1.9.2.css" />  
-<script type = "text/javascript">
-  
-</script>
-</head>
-<body>
-  <div class="row">
-      <div class="large-4 large-push-8 columns">
-        <div class="social_networks"><a href="https://twitter.com/TheBurgE3" target="_blank"><img src="img/download.jpg" alt="tw" /></a><a href="https://www.linkedin.com/pub/eric-burger/63/4b6/179" target="_blank"><img src="img/in.png" alt="in" /></a></div>
-      </div>
-    </div>
-  
-
-  <div class="row">
-  <div class="large-12 columns">
-  <div class="sticky">
-  <nav class="top-bar" data-topbar>
-      
-      <section class="top-bar-section">
-      <!-- Right Nav Section -->
-        <!-- <li class="active"><a href="#">Right Button Active</a></li> -->
-      <ul class="left">  
-      <li class="active hide-for-small"><a href ="./EBHome.html" style="font-size:17px;">Eric Burger - Fun with Making Things</a></li>
-      <li class="active show-for-small"><a href ="#" style="font-size:17px;">Eric Burger - Fun with Making Things</a></li>      
-      </ul>
-      <!-- Left Nav Section -->
-      <ul class="right">
-        <li class="show-for-small"><a href="./EBHome.html">HOME</a></li>
-        <li><a href="./about.html">ABOUT</a></li>
-        <li><a href="./blog.html">BLOG</a></li>
-        <li class="has-dropdown"><a>PROJECTS</a>
-        <ul class="dropdown">
-          <li class="show-for-small"><a href="./projects.html">Featured Projects</a></li>
-          <li><a href="./design.html">Design</a></li>
-          <li><a href="./programming.html">Programming</a></li>
-          <li><a href="./misc.html">Miscellaneous</a></li>
-        </ul> 
-        </li>
-        <li><a href="./contact.html">CONTACT ME</a></li> 
-      </ul>
-      </section>
     </nav>
-  </div>
-  </div>
-  </div>
-  
-  <div class="row">
-    <div class="large-12 columns">
-      <ul class="example-orbit" data-orbit>
-        <li>
-        <a href="./contact.html"><img src="img/contact.png" alt="slide 1" /></a>
-        <div class="orbit-caption">
-          Contact me through LinkedIn, email, or Twitter. <a class="small button" href = "./contact.html"> Contact Info </a>
-        </div>
-        </li>
-        <li>
-        <a href="./projects.html"><img src="img/2front.png" alt="slide 2" /></a>
-        <div class="orbit-caption">
-          View my current works in progress and finished projects.
-          <a class="small button" href="./design.html"> Read More </a>
-        </div>
-        </li>
-        <li>
-        <a href="./programming.html"><img src="img/funwithjquery.png" alt="slide 3" /></a>
-        <div class="orbit-caption">
-            Fun with JQuery and other script-related things.
-            <a class="small button" href="./programming.html"> Read More </a>
-        </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="large-6 columns">
-    <div class="panel" data-equalizer-watch>
-    <p><h3>Hi, I'm Eric.</h3></p>
-    <p>This place showcases my past projects, my learning experiences, and my passion for building cool things. Take a look at the 'About' section to learn more about me, or check out some of the stuff I've worked on/am working on at the Projects page.</p>
-      <div class="row">
-        <div class="small-12 small-centered columns">
-        <img src="img/me.jpg" alt="me" />
-        </div>
-      </div>
-    </div>
-    </div>
-    
-    <!-- Twitter timeline -->
-    <div class="large-6 columns">
-    <a class="twitter-timeline" href="https://twitter.com/TheBurgE3" data-widget-id="470343012673785856">Tweets by @TheBurgE3</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-    </div>
-    
-  </div>
-  
-  <div class="row">
-    <div id = "footer" class="large-12 columns">
-    <div class="social_networks"><a href="https://twitter.com/TheBurgE3" target="_blank"><img src="img/twitter.png" alt="twitter" /></a></div>
-    <div class="social_networks"><a href="https://www.linkedin.com/pub/eric-burger/63/4b6/179" target="_blank"><img src="img/in.png" alt="in" /></a></div>
-      <div class="large-5 push-4 columns">
-      <ul class="inline-list" id="footer_links">
-        <li><a href="./EBHome.html">Home</a></li>
-        <li><a href="./about.html">About</a></li>
-        <li><a href="./blog.html">Blog</a></li>
-        <li><a href="./contact.html">Contact</a></li>
-      </ul>
-      <p><div style="font-size:75%">Eric Burger | eric.burger@comcast.net | @TheBurgE3<div></p>
-    </div>
-  </div>
-  
-    <script src="js/vendor/jquery.js"></script>
-    <script src="js/foundation.min.js"></script>
-    <script>
-      $(document).foundation();
-    </script>
 
-<!--   {% include pagination.html %} -->
+    <div class="container-fluid p-0">
 
-  <!--<p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>-->
-</div>
+      <section class="resume-section p-3 p-lg-5 d-flex d-column" id="about">
+        <div class="my-auto">
+          <h1 class="mb-0">Eric
+            <span class="text-primary">Burger</span>
+          </h1>
+          <div class="subheading mb-5">Software Engineer +  Developer + Tech Enthusiast · Chicago, IL 60657 ·
+            <a href="mailto:eric.burger@comcast.net">eric.burger@comcast.net</a>
+          </div>
+          <ul class="list-inline list-social-icons mb-0">
+            <li class="list-inline-item">
+              <a href="#">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://www.linkedin.com/in/eric-burger-1794b663/">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/burgere">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
+        <div class="my-auto">
+          <h2 class="mb-5">Experience</h2>
+
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="resume-content mr-auto">
+              <h3 class="mb-0">Senior Software Consultant</h3>
+              <div class="subheading mb-3">Allstate/Arity</div>
+              <ul>
+                <li>Engineered Java applications using Spring/Spring Boot in Agile XP</li>
+                <li>Spearheaded effort to increase in-house mobile engineering talent and became proficient in native application development (iOS/Swift) within 4 months
+                  </li>
+                <li>Delivered Astronaut - a connected car application that allows users to manage vehicle diagnostics and engine alerts
+                  </li>
+                <li>Managed app store releases, CI/CD processes, and feature development for the front-end of Astronaut  </li>
+                <li>Conducted paired programming interviews with over fifteen candidates, brought on five new hires for the company
+                  </li>
+              </ul>
+            </div>
+            <div class="resume-date text-md-right">
+              <span class="text-primary">August 2016 - Present</span>
+            </div>
+          </div>
+
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="resume-content mr-auto">
+              <h3 class="mb-0">Software Engineer</h3>
+              <div class="subheading mb-3">PointSource, LLC</div>
+              <ul>
+                <li>Developed hybrid, mobile web applications using open source libraries</li>
+                <li>Delivered a conference room reservation application, collaborated with designers to produce a user interface.</li>
+                <li>Developed the front-end for a food truck finder application using AngularJS and Cordova</li>
+                <li>Managed and mentored a summer intern</li>
+
+              </ul>
+            </div>
+            <div class="resume-date text-md-right">
+              <span class="text-primary">June 2014 - March 2016</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="education">
+        <div class="my-auto">
+          <h2 class="mb-5">Education</h2>
+
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="resume-content mr-auto">
+              <h3 class="mb-0">DePaul University</h3>
+              <div class="subheading mb-3">Bachelor of Science</div>
+              <div>Interactive & Social Media + Computer Science</div>
+              <br />
+              <ul>
+                <li>Graduated Summa Cum Laude: College of Computing and Digital Media</li>
+                <li>Course experience in database design, user-centered web design, human-computer interaction, and interaction design
+                  </li>
+                <li>Wireframes, prototyping, design patterns, user studies, usability testing, and analysis
+                  </li>
+                <li>Designed and produced a portfolio website and a responsive website for the North Lawndale Greening Committee</li>
+              </ul>
+            </div>
+            <div class="resume-date text-md-right">
+              <div class="text-primary mb-3">Graduated Spring 2015</div>
+              <div class="resume-date text-md-right">
+                <img src="img/depaul.png" />
+              </div>
+            </div>
+          </div>
+
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="resume-content mr-auto">
+              <h3 class="mb-0">Galvanize Accelerator Program</h3>
+              <div class="subheading mb-3">Development Bootcamp</div>
+              <ul>
+                <li>Java Spring & Spring Boot applications, test driven development and Agile XP</li>
+                <li>Built front-end applications using React.js, Express.js</li>
+              </ul>
+            </div>
+            <div class="resume-date text-md-right">
+                <div class="text-primary mb-3">Fall 2016 - Spring 2017</div>
+              <div class="resume-date text-md-right">
+                  <img src="img/galvanize.png" />
+                </div>
+            </div>
+          </div>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="skills">
+        <div class="my-auto">
+          <h2 class="mb-5">Skills</h2>
+
+          <div class="subheading mb-3">Programming Languages &amp; Tools</div>
+          <ul class="list-inline list-icons">
+            <li class="list-inline-item">
+              <i class="devicons devicons-html5"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-css3"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-javascript"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-python"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-java"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-sass"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-less"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-bootstrap"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-npm"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-react"></i>
+            </li>
+            <li class="list-inline-item">
+              <i class="devicons devicons-angular"></i>
+            </li>
+          </ul>
+
+          <div class="subheading mb-3">Workflow</div>
+          <ul class="fa-ul mb-0">
+            <li>
+              <i class="fa-li fa fa-check"></i>
+              Mobile-First, Responsive Design</li>
+            <li>
+              <i class="fa-li fa fa-check"></i>
+              Cross Browser Testing &amp; Debugging</li>
+            <li>
+              <i class="fa-li fa fa-check"></i>
+              Cross Functional Teams &amp; Full Stack</li>
+            <li>
+              <i class="fa-li fa fa-check"></i>
+              Agile Development &amp; Test-Driven Development</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="interests">
+        <div class="my-auto">
+          <h2 class="mb-5">Interests</h2>
+          <p>When I'm not coding, I'm writing. You can peruse my ramblings on all things <a href="https://medium.com/@eric_b">on Medium.</a></p>
+        </div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="awards">
+        <div class="my-auto">
+            <h2 class="mb-5">Resume</h2>
+            <a href="resources/Eric Burger resume v12.pdf"><img src="img/preview.png" alt="thumb" class="img-thumbnail" /></a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="js/resume.min.js"></script>
+
+  </body>
+
+</html>
