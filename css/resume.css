@@ -59,6 +59,13 @@ h2 {
   color: #BD5D38;
 }
 
+.resume-button {
+  padding: 18px;
+  border-radius: 18px;
+  color: #ffffff;
+  background-color: #bd5d38;
+}
+
 #sideNav .navbar-nav .nav-item .nav-link {
   font-weight: 600;
   text-transform: uppercase;
