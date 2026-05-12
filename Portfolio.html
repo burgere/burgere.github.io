@@ -1,0 +1,2498 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Eric Burger — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0e1014;
+    --ink-2:#161922;
+    --paper:#e8dfc8;
+    --paper-dim:#c9bfa6;
+    --gold:#e8b86b;
+    --gold-deep:#b88a3e;
+    --teal:#3a4d4a;
+    --teal-deep:#22302d;
+    --plum:#4a3f5c;
+    --rose:#c25b6b;
+    --rule:rgba(232,223,200,.18);
+    --rule-strong:rgba(232,223,200,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);font-family:'Inter',sans-serif;overflow:hidden;height:100vh;width:100vw;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--gold);color:var(--ink)}
+
+  /* ---------- horizontal scroll rail ---------- */
+  .rail{
+    height:100vh; width:100vw;
+    overflow-x:auto; overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    display:flex;
+    scrollbar-width:none;
+  }
+  .rail::-webkit-scrollbar{display:none}
+  .slide{
+    flex:0 0 100vw;
+    height:100vh;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ---------- shared type ---------- */
+  .display{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    line-height:.95;
+    letter-spacing:-.015em;
+  }
+  .mono{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+  .body{
+    font-size:15px;
+    line-height:1.65;
+    color:var(--paper-dim);
+    max-width:46ch;
+    text-wrap:pretty;
+  }
+
+  /* ---------- chrome ---------- */
+  .chrome{
+    position:fixed; inset:0;
+    pointer-events:none;
+    z-index:50;
+  }
+  .chrome > *{pointer-events:auto}
+  .top-bar{
+    position:absolute; top:0; left:0; right:0;
+    padding:22px 36px;
+    display:flex; align-items:center; justify-content:space-between;
+    background:linear-gradient(to bottom, rgba(14,16,20,.85), rgba(14,16,20,0));
+  }
+  .brand{
+    display:flex; align-items:baseline; gap:14px;
+  }
+  .brand .glyph{
+    width:28px; height:28px; border:1px solid var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:600;
+    transform:translateY(4px);
+  }
+  .brand .who{font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:500}
+  .brand .who em{font-style:italic; color:var(--gold)}
+  .nav-mono{display:flex; gap:28px}
+  .nav-mono button{
+    background:none; border:0; color:var(--paper-dim); cursor:pointer;
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.18em;
+    text-transform:uppercase; padding:6px 0; position:relative;
+    transition:color .2s;
+  }
+  .nav-mono button:hover{color:var(--paper)}
+  .nav-mono button.active{color:var(--gold)}
+  .nav-mono button.active::after{
+    content:""; position:absolute; left:0; right:0; bottom:-2px; height:1px; background:var(--gold);
+  }
+
+  .bottom-bar{
+    position:absolute; bottom:0; left:0; right:0;
+    padding:24px 36px 28px;
+    display:flex; align-items:center; gap:24px;
+    background:linear-gradient(to top, rgba(14,16,20,.92), rgba(14,16,20,0));
+  }
+  .counter{
+    font-family:'Cormorant Garamond', serif;
+    font-size:28px; font-weight:500; line-height:1;
+    display:flex; align-items:baseline; gap:8px;
+    min-width:90px;
+  }
+  .counter .total{color:var(--paper-dim); font-size:18px}
+  .counter .sep{color:var(--paper-dim); font-size:18px}
+  .scrubber{flex:1; position:relative; height:44px; cursor:pointer; display:flex; align-items:center}
+  .scrubber-track{position:absolute; left:0; right:0; height:1px; background:var(--rule); top:50%}
+  .scrubber-marks{position:absolute; left:0; right:0; top:0; bottom:0}
+  .scrubber-mark{
+    position:absolute; top:0; bottom:0; width:28px; transform:translateX(-50%);
+    background:transparent; border:none; cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .scrubber-mark::before{
+    content:''; width:1px; height:8px; background:var(--rule-strong);
+    transition:background .18s, height .18s;
+    pointer-events:none;
+  }
+  .scrubber-mark.passed::before{background:var(--gold); height:14px}
+  .scrubber-mark.current::before{background:var(--gold); height:18px; box-shadow:0 0 12px var(--gold)}
+  .scrubber-mark:hover::before,.scrubber-mark.scrubber-preview::before{background:rgba(232,184,107,.65); height:16px}
+  .scrubber-mark.current.scrubber-preview::before{background:var(--gold); height:18px; box-shadow:0 0 12px var(--gold)}
+  .scrubber-label{
+    position:absolute; bottom:calc(100% + 7px);
+    transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--paper); white-space:nowrap; opacity:0; pointer-events:none;
+    transition:opacity .12s;
+    background:rgba(14,16,20,.92); padding:3px 8px;
+    border:1px solid rgba(232,184,107,.35);
+  }
+
+  /* ---------- mobile slide-title button (hidden on desktop) ---------- */
+  .slide-title-btn{display:none}
+
+  /* ---------- nav overlay (slide-up sheet, mobile-triggered) ---------- */
+  .nav-overlay{
+    position:fixed; inset:0; z-index:60;
+    background:rgba(14,16,20,.55);
+    display:flex; align-items:flex-end;
+    opacity:0; pointer-events:none;
+    transition:opacity .22s;
+  }
+  .nav-overlay.open{opacity:1; pointer-events:auto}
+  .nav-overlay-sheet{
+    width:100%; max-height:82vh;
+    background:var(--ink);
+    border-top:1px solid var(--rule-strong);
+    display:flex; flex-direction:column;
+    transform:translateY(100%);
+    transition:transform .28s cubic-bezier(.32,.72,0,1);
+  }
+  .nav-overlay.open .nav-overlay-sheet{transform:translateY(0)}
+  .nav-overlay-handle{
+    display:flex; justify-content:center; padding:12px 0 6px; cursor:pointer; flex-shrink:0;
+  }
+  .nav-overlay-handle::before{
+    content:''; width:36px; height:3px; background:var(--rule-strong); border-radius:2px;
+  }
+  .nav-overlay-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:4px 24px 14px; border-bottom:1px solid var(--rule); flex-shrink:0;
+  }
+  .nav-overlay-eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--paper-dim);
+  }
+  .nav-overlay-close{
+    background:none; border:1px solid var(--rule); color:var(--paper-dim); cursor:pointer;
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:13px;
+    transition:border-color .15s, color .15s;
+  }
+  .nav-overlay-close:hover{border-color:var(--rule-strong); color:var(--paper)}
+  .nav-overlay-list{
+    flex:1; overflow-y:auto; padding:8px 0 36px;
+    overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  }
+  .nav-overlay-chapter{
+    padding:18px 24px 6px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold);
+  }
+  .nav-overlay-item{
+    display:flex; align-items:baseline; gap:14px;
+    width:100%; padding:11px 24px;
+    background:none; border:none; text-align:left; cursor:pointer;
+    transition:background .12s;
+  }
+  .nav-overlay-item:hover,.nav-overlay-item:active{background:rgba(255,255,255,.04)}
+  .nav-overlay-item.active{background:rgba(232,184,107,.07)}
+  .nav-overlay-item .item-num{
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.15em;
+    color:var(--paper-dim); min-width:22px; flex-shrink:0;
+  }
+  .nav-overlay-item.active .item-num{color:var(--gold)}
+  .nav-overlay-item .item-title{
+    font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500;
+    color:var(--paper-dim); line-height:1.1;
+  }
+  .nav-overlay-item:hover .item-title,.nav-overlay-item.active .item-title{color:var(--paper)}
+
+  .arrows{display:flex; gap:10px}
+  .arrow-btn{
+    width:42px; height:42px; border:1px solid var(--rule-strong); background:transparent; color:var(--paper);
+    border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .2s; font-family:'JetBrains Mono',monospace;
+  }
+  .arrow-btn:hover{border-color:var(--gold); color:var(--gold); background:rgba(232,184,107,.06)}
+  .arrow-btn:disabled{opacity:.3; cursor:not-allowed}
+  .hint{
+    position:absolute; bottom:90px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.2em;
+    color:var(--paper-dim); opacity:.5;
+    text-transform:uppercase; pointer-events:none;
+    animation:hint-fade 4s ease-out 2s forwards;
+  }
+  @keyframes hint-fade{to{opacity:0; transform:translate(-50%, 8px)}}
+
+  /* ---------- slide 01: hero intro ---------- */
+  .s-intro{
+    background:
+      radial-gradient(ellipse at 70% 50%, rgba(232,184,107,.08), transparent 60%),
+      var(--ink);
+    display:grid;
+    grid-template-columns:1.05fr 1fr;
+    align-items:stretch;
+  }
+  .s-intro .left{
+    padding:110px 70px 70px 70px;
+    display:flex; flex-direction:column; justify-content:center;
+    position:relative;
+  }
+  .s-intro .left::before{
+    content:""; position:absolute; left:70px; top:110px; bottom:70px; width:1px; background:var(--rule);
+  }
+  .s-intro .left .pad{padding-left:28px}
+  .s-intro h1{
+    font-size:clamp(60px, 7.4vw, 124px); margin:0 0 20px;
+    color:var(--paper);
+  }
+  .s-intro h1 em{font-style:italic; color:var(--gold); font-weight:400}
+  .s-intro .lede{font-size:17px; line-height:1.55; color:var(--paper); max-width:46ch; margin:0 0 20px}
+  .s-intro .lede strong{color:var(--gold); font-weight:500}
+  .s-intro .meta{display:flex; gap:42px; margin-top:32px}
+  .s-intro .meta .k{display:block; color:var(--paper-dim); margin-bottom:6px}
+  .s-intro .meta .v{font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500; color:var(--paper)}
+
+  .s-intro .right{
+    background:linear-gradient(135deg, var(--teal-deep), var(--ink-2));
+    position:relative; overflow:hidden;
+  }
+  .portrait-frame{
+    position:absolute; inset:60px;
+    border:1px solid var(--rule-strong);
+    background:#0a0c10 center/cover no-repeat;
+    overflow:hidden;
+  }
+  .portrait-frame .photo{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover; object-position:center 30%;
+    display:block;
+    filter:saturate(.92) contrast(1.02);
+  }
+  .portrait-frame::after{
+    content:""; position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(10,12,16,.55) 100%),
+      linear-gradient(180deg, rgba(10,12,16,.15), rgba(10,12,16,.0) 30%);
+    pointer-events:none;
+  }
+  .portrait-frame .caption{
+    position:absolute; left:24px; bottom:22px; right:24px;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    z-index:2;
+  }
+  .portrait-frame .caption .label{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--paper)}
+  .portrait-frame .caption .sub{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.16em; color:var(--gold)}
+  .portrait-frame .glyph{
+    width:80px; height:80px; border:1px solid var(--rule-strong);
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:42px; color:var(--gold);
+  }
+  .portrait-frame .label{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase}
+  .portrait-frame .sub{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.16em; color:var(--paper-dim); opacity:.6}
+  .corner-marks{position:absolute; inset:48px; pointer-events:none}
+  .corner-marks span{position:absolute; width:14px; height:14px; border-color:var(--gold)}
+  .corner-marks span.tl{top:0; left:0; border-top:1px solid; border-left:1px solid}
+  .corner-marks span.tr{top:0; right:0; border-top:1px solid; border-right:1px solid}
+  .corner-marks span.bl{bottom:0; left:0; border-bottom:1px solid; border-left:1px solid}
+  .corner-marks span.br{bottom:0; right:0; border-bottom:1px solid; border-right:1px solid}
+
+  /* ---------- slide 02: role / iOS overview ---------- */
+  .s-role{
+    background:var(--ink);
+    display:grid; grid-template-columns:1fr 1fr; gap:0;
+    padding:120px 80px 100px;
+    align-content:center;
+  }
+  .s-role .col-l{padding-right:80px; border-right:1px solid var(--rule)}
+  .s-role .col-r{padding-left:80px}
+  .s-role h2{font-size:clamp(56px, 6.4vw, 104px); margin:24px 0 0; color:var(--paper)}
+  .s-role h2 em{font-style:italic; color:var(--gold); font-weight:400}
+  .s-role .lede{font-size:18px; line-height:1.6; color:var(--paper); max-width:42ch; margin:36px 0 0}
+  .stack{display:flex; flex-wrap:wrap; gap:8px; margin-top:36px}
+  .chip{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em;
+    text-transform:uppercase; padding:7px 12px;
+    border:1px solid var(--rule-strong); color:var(--paper);
+    background:rgba(232,223,200,.03);
+  }
+  .chip.gold{border-color:var(--gold); color:var(--gold)}
+  .stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:36px 24px; margin-top:8px}
+  .stat .num{font-family:'Cormorant Garamond',serif; font-size:88px; font-weight:500; line-height:1; color:var(--gold)}
+  .stat .num small{font-size:36px; color:var(--paper)}
+  .stat .lbl{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--paper-dim); margin-top:8px}
+  .award-row{margin-top:48px; display:flex; gap:24px; align-items:center}
+  .award{
+    border:1px solid var(--rule);
+    padding:14px 18px; display:flex; gap:14px; align-items:center;
+    background:rgba(232,184,107,.03);
+  }
+  .award .laurel{font-family:'Cormorant Garamond',serif; font-size:42px; color:var(--gold); line-height:1}
+  .award .text{font-size:12px; line-height:1.4; color:var(--paper)}
+  .award .text strong{display:block; color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; margin-bottom:2px}
+
+  /* ---------- slide 03,05,07: case study layout ---------- */
+  .s-case{
+    background:var(--ink);
+    display:grid; grid-template-columns:.95fr 1fr;
+    align-items:stretch;
+  }
+  .s-case .info{
+    padding:clamp(100px,13vh,160px) clamp(40px,5.5vw,70px) clamp(140px,16vh,180px) clamp(44px,6vw,80px);
+    display:flex; flex-direction:column; justify-content:center;
+    position:relative;
+    overflow-y:auto;
+  }
+  .s-case .row{display:flex; gap:14px; align-items:center; margin-bottom:clamp(12px,2.5vh,24px)}
+  .s-case .role-tag{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--paper-dim)}
+  .s-case h2{font-family:'Cormorant Garamond', serif; font-size:clamp(54px, 6vw, 92px); font-weight:500; line-height:.95; margin:0 0 clamp(12px,2vh,22px); color:var(--paper); letter-spacing:-.015em}
+  .s-case h2 em{font-style:italic; color:var(--gold); font-weight:400}
+  .s-case .lede{font-size:clamp(15px,1.5vw,17px); line-height:1.6; color:var(--paper); max-width:48ch}
+  .s-case ul{
+    list-style:none; padding:0; margin:clamp(16px,3vh,32px) 0 0;
+    display:flex; flex-direction:column; gap:clamp(8px,1.5vh,14px);
+  }
+  .s-case li{
+    font-size:14px; line-height:1.55; color:var(--paper-dim);
+    padding-left:24px; position:relative; max-width:52ch;
+  }
+  .s-case li::before{
+    content:""; position:absolute; left:0; top:9px; width:14px; height:1px; background:var(--gold);
+  }
+  .s-case li strong{color:var(--gold); font-weight:500}
+  .case-meta{
+    margin-top:clamp(20px,4vh,48px); display:grid; grid-template-columns:repeat(3,auto); gap:36px;
+    border-top:1px solid var(--rule); padding-top:clamp(14px,2vh,24px); max-width:520px;
+  }
+  .case-meta .k{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:6px}
+  .case-meta .v{font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--paper); font-weight:500}
+
+  /* visual side panels */
+  .visual{position:relative; overflow:hidden}
+  .visual .img-frame{
+    position:absolute; inset:60px;
+    border:1px solid var(--rule-strong);
+    display:flex; align-items:center; justify-content:center;
+    background:
+      repeating-linear-gradient(135deg, rgba(232,223,200,.05) 0 1px, transparent 1px 18px),
+      linear-gradient(180deg, var(--bg-a, var(--ink-2)), var(--bg-b, #0b0d12));
+  }
+  .visual .img-label{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--paper-dim); text-align:center;
+  }
+  .visual .img-label .glyph{
+    font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--gold);
+    font-size:48px; display:block; margin-bottom:16px;
+  }
+  .visual .stamp{
+    position:absolute; top:48px; right:48px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em;
+    color:var(--gold); text-transform:uppercase;
+  }
+  .visual .corner{position:absolute; inset:48px; pointer-events:none}
+  .visual .corner span{position:absolute; width:14px; height:14px; border-color:var(--gold)}
+  .visual .corner .tl{top:0; left:0; border-top:1px solid; border-left:1px solid}
+  .visual .corner .tr{top:0; right:0; border-top:1px solid; border-right:1px solid}
+  .visual .corner .bl{bottom:0; left:0; border-bottom:1px solid; border-left:1px solid}
+  .visual .corner .br{bottom:0; right:0; border-bottom:1px solid; border-right:1px solid}
+
+  /* real-screenshot phone — wraps a screenshot in our bezel */
+  .phone-real{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:300px; height:620px;
+    background:#0e1014; border-radius:38px;
+    border:1px solid rgba(232,184,107,.22);
+    box-shadow:
+      0 30px 80px rgba(0,0,0,.7),
+      0 0 0 1px rgba(0,0,0,.6) inset,
+      0 0 60px rgba(232,184,107,.06);
+    padding:10px;
+    overflow:hidden;
+  }
+  .phone-real .glass{
+    position:relative; width:100%; height:100%;
+    border-radius:30px; overflow:hidden;
+    background:#000;
+  }
+  .phone-real .glass img{
+    width:100%; height:100%; object-fit:cover; object-position:top center;
+    display:block;
+  }
+  .phone-real .glass::after{
+    content:""; position:absolute; inset:0;
+    border-radius:30px; pointer-events:none;
+    box-shadow:0 0 0 1px rgba(232,184,107,.15) inset;
+  }
+  .phone-real .notch-real{
+    position:absolute; top:18px; left:50%; transform:translateX(-50%);
+    width:96px; height:22px; background:#000; border-radius:14px;
+    z-index:3;
+  }
+  .phone-real .caption{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:-44px; white-space:nowrap;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold);
+  }
+
+  /* phone mock for case studies */
+  .phone-mock{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:280px; height:580px; border-radius:36px;
+    background:#000; border:1px solid var(--rule-strong);
+    box-shadow:0 40px 80px rgba(0,0,0,.6), 0 0 0 6px rgba(232,184,107,.04);
+    display:flex; flex-direction:column; padding:14px 12px;
+    overflow:hidden;
+  }
+  .phone-mock .notch{width:100px; height:22px; background:#000; border-radius:0 0 14px 14px; margin:0 auto -8px; position:relative; z-index:2}
+  .phone-mock .screen{
+    flex:1; border-radius:24px; overflow:hidden; position:relative;
+    background:linear-gradient(180deg, var(--screen-a, #1a2030), var(--screen-b, #0a0d14));
+    display:flex; flex-direction:column; padding:32px 16px 16px;
+  }
+  .phone-mock .status{display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--paper); padding:0 4px 12px}
+  .phone-mock .ph-h{font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--paper); margin-bottom:14px; font-weight:500}
+  .phone-mock .ph-h em{font-style:italic; color:var(--gold)}
+  .phone-mock .row-l{display:flex; justify-content:space-between; align-items:center; padding:11px 6px; border-bottom:1px solid rgba(255,255,255,.08); font-size:11px}
+  .phone-mock .row-l .t{display:flex; flex-direction:column}
+  .phone-mock .row-l .sym{font-family:'JetBrains Mono',monospace; color:var(--paper); font-size:12px}
+  .phone-mock .row-l .nm{color:rgba(255,255,255,.5); font-size:9px; margin-top:2px}
+  .phone-mock .row-l .px{font-family:'JetBrains Mono',monospace; color:var(--paper); font-size:12px}
+  .phone-mock .row-l .ch{font-size:9px; margin-top:2px; text-align:right}
+  .phone-mock .row-l .ch.up{color:#7ed4a3}
+  .phone-mock .row-l .ch.dn{color:var(--rose)}
+  .phone-mock .chart{height:120px; margin:14px 0; position:relative; border:1px solid rgba(255,255,255,.06)}
+  .phone-mock .chart svg{position:absolute; inset:0; width:100%; height:100%}
+
+  /* redbox phone */
+  .phone-mock.redbox .screen{background:linear-gradient(180deg, #1a0e10, #0a0608)}
+  .phone-mock.redbox .ph-h{color:var(--paper)}
+  .phone-mock.redbox .grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px}
+  .phone-mock.redbox .tile{
+    aspect-ratio:2/3; border:1px solid rgba(232,184,107,.2);
+    background:linear-gradient(180deg, rgba(194,91,107,.25), rgba(74,63,92,.4));
+    display:flex; align-items:flex-end; padding:6px;
+    font-family:'Cormorant Garamond',serif; font-size:10px; color:var(--paper); font-style:italic; line-height:1.1;
+  }
+  .phone-mock.redbox .tile.b{background:linear-gradient(180deg, rgba(58,77,74,.4), rgba(34,48,45,.6))}
+  .phone-mock.redbox .tile.c{background:linear-gradient(180deg, rgba(232,184,107,.18), rgba(184,138,62,.3))}
+  .phone-mock.redbox .tile.d{background:linear-gradient(180deg, rgba(74,63,92,.4), rgba(34,48,45,.4))}
+
+  /* allstate phone (map) */
+  .phone-mock.allstate .screen{background:#0d1822}
+  .phone-mock.allstate .map{
+    position:absolute; inset:32px 0 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 1px, transparent 1px 22px),
+      linear-gradient(180deg, #0d1822, #060b10);
+  }
+  .phone-mock.allstate .route{position:absolute; inset:0; pointer-events:none}
+  .phone-mock.allstate .pin{position:absolute; width:10px; height:10px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(232,184,107,.2), 0 0 0 8px rgba(232,184,107,.08)}
+  .phone-mock.allstate .card-bot{
+    position:absolute; left:14px; right:14px; bottom:14px; padding:14px;
+    background:rgba(14,16,20,.85); backdrop-filter:blur(8px);
+    border:1px solid rgba(232,184,107,.2); border-radius:8px;
+  }
+  .phone-mock.allstate .card-bot .tl{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px}
+  .phone-mock.allstate .card-bot .ti{font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--paper); margin-bottom:8px}
+  .phone-mock.allstate .card-bot .stats{display:flex; gap:14px; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--paper-dim)}
+  .phone-mock.allstate .card-bot .stats span strong{color:var(--paper); display:block; font-size:14px; font-family:'Cormorant Garamond',serif; font-weight:500}
+
+  /* ---------- testimonial slides ---------- */
+  .s-quote{
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(232,184,107,.06), transparent 50%),
+      var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    padding:100px 120px;
+    position:relative;
+  }
+  .s-quote .quote-mark{
+    position:absolute; left:80px; top:80px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:380px; line-height:.7; color:var(--gold); opacity:.18;
+    font-style:italic;
+  }
+  .s-quote .body{
+    position:relative; z-index:1; max-width:1100px;
+    display:grid; grid-template-columns:.7fr 1.3fr; gap:80px; align-items:center;
+  }
+  .s-quote .who-card{
+    border-left:1px solid var(--gold);
+    padding:24px 32px;
+  }
+  .s-quote .who-card .role-eyebrow{display:block; margin-bottom:16px}
+  .s-quote .who-card .nm{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:500; color:var(--paper); line-height:1.1; margin-bottom:6px}
+  .s-quote .who-card .ti{font-size:13px; color:var(--paper-dim); line-height:1.5}
+  .s-quote .who-card .ti em{color:var(--gold); font-style:normal}
+  .s-quote blockquote{
+    margin:0;
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(28px, 2.4vw, 40px);
+    line-height:1.3;
+    color:var(--paper);
+    font-weight:400;
+    font-style:italic;
+    text-wrap:pretty;
+  }
+  .s-quote blockquote .pull{color:var(--gold); font-style:italic}
+
+  /* ---------- side projects intro ---------- */
+  .s-pivot{
+    background:
+      linear-gradient(135deg, #1a1424 0%, #0e1014 60%);
+    display:grid; grid-template-columns:1fr 1fr;
+    align-items:center;
+    padding:0 80px;
+    overflow:hidden;
+  }
+  .s-pivot::before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at 75% 50%, rgba(194,91,107,.12), transparent 40%),
+      radial-gradient(ellipse at 60% 60%, rgba(232,184,107,.1), transparent 50%);
+    pointer-events:none;
+  }
+  .s-pivot .text{position:relative; z-index:2; padding-right:40px}
+  .s-pivot h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(72px, 8vw, 130px);
+    font-weight:500; line-height:.92;
+    margin:24px 0 32px;
+    color:var(--paper);
+  }
+  .s-pivot h2 em{font-style:italic; color:var(--gold); font-weight:400; display:block}
+  .s-pivot .text .body{font-size:17px; max-width:42ch}
+  .s-pivot .anubis-stage{
+    position:relative; height:80vh; display:flex; align-items:center; justify-content:center;
+    z-index:2;
+  }
+  .s-pivot .anubis-stage::before{
+    content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:520px; height:520px; border-radius:50%;
+    background:radial-gradient(circle, rgba(232,184,107,.15), transparent 60%);
+    filter:blur(20px);
+  }
+  .s-pivot .anubis{
+    height:90%; width:auto; max-width:100%; position:relative;
+    filter:drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 60px rgba(232,184,107,.2));
+  }
+  .s-pivot .glyph-marks{
+    position:absolute; left:80px; top:80px; right:80px; bottom:80px;
+    pointer-events:none;
+    border:1px solid rgba(232,184,107,.18);
+  }
+  .s-pivot .glyph-marks::before, .s-pivot .glyph-marks::after{
+    content:""; position:absolute; width:30px; height:30px;
+    border-color:var(--gold);
+  }
+  .s-pivot .glyph-marks::before{top:-1px; left:-1px; border-top:1px solid; border-left:1px solid}
+  .s-pivot .glyph-marks::after{bottom:-1px; right:-1px; border-bottom:1px solid; border-right:1px solid}
+
+  /* ---------- bestiary / icon grid (Eric's B&W game art) ---------- */
+  .s-bestiary{
+    background:#f4ece0;
+    color:#1a1814;
+    padding:90px 80px 110px;
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    gap:60px;
+    overflow:hidden;
+    position:relative;
+  }
+  .s-bestiary::before{
+    content:""; position:absolute; inset:30px;
+    border:1px solid #1a1814; pointer-events:none;
+    box-shadow:inset 0 0 0 6px #f4ece0, inset 0 0 0 7px #1a1814;
+  }
+  .s-bestiary .col-l{position:relative; z-index:2; padding-left:30px; padding-top:30px}
+  .s-bestiary .eyebrow{color:#7a6b54; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; text-transform:uppercase}
+  .s-bestiary h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:88px; font-weight:500; line-height:.9;
+    margin:24px 0 26px; color:#1a1814; letter-spacing:-.02em;
+  }
+  .s-bestiary h2 em{font-style:italic; color:#8b3a2e; font-weight:400}
+  .s-bestiary p{font-size:15px; line-height:1.65; color:#3d352a; margin:0 0 18px; max-width:34ch; text-wrap:pretty}
+  .s-bestiary .credit{
+    margin-top:30px; padding-top:18px; border-top:1px solid #1a1814;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em;
+    text-transform:uppercase; color:#5a4f3e;
+  }
+  .s-bestiary .credit strong{color:#1a1814; font-weight:500}
+  .s-bestiary .grid{
+    position:relative; z-index:2;
+    display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(2, 1fr);
+    gap:0;
+    padding-right:30px; padding-top:30px;
+  }
+  .s-bestiary .cel{
+    position:relative;
+    border:1px solid #1a1814;
+    margin-left:-1px; margin-top:-1px;
+    aspect-ratio:1/1;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    background:#fbf6ec;
+  }
+  .s-bestiary .cel.dark{background:#000000}
+  .s-bestiary .cel img{
+    max-width:78%; max-height:78%; object-fit:contain;
+    transition:transform .6s ease;
+  }
+  .s-bestiary .cel:hover img{transform:scale(1.06)}
+  .s-bestiary .cel .lbl{
+    position:absolute; left:10px; bottom:8px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em;
+    text-transform:uppercase; color:#5a4f3e;
+  }
+  .s-bestiary .cel.dark .lbl{color:#a99a78}
+  .s-bestiary .cel .num{
+    position:absolute; right:10px; top:8px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em;
+    color:#7a6b54;
+  }
+  .s-bestiary .cel.dark .num{color:#a99a78}
+
+  /* ---------- treasure / chest spread ---------- */
+  .s-treasure{
+    background:#f4ece0; color:#1a1814;
+    padding:80px;
+    overflow:hidden;
+    position:relative;
+    display:grid;
+    grid-template-columns: 1fr 1fr 1.2fr;
+    gap:40px;
+    align-items:center;
+  }
+  .s-treasure::before{
+    content:""; position:absolute; inset:30px;
+    border:1px solid #1a1814; pointer-events:none;
+  }
+  .s-treasure .stage{
+    position:relative; z-index:2;
+    height:calc(100vh - 200px);
+    display:flex; align-items:center; justify-content:center;
+    background:#fbf6ec;
+    border:1px solid #1a1814;
+  }
+  .s-treasure .stage img{
+    max-width:78%; max-height:78%; object-fit:contain;
+  }
+  .s-treasure .stage .stage-tag{
+    position:absolute; top:14px; left:18px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:#7a6b54;
+  }
+  .s-treasure .stage .stage-num{
+    position:absolute; bottom:14px; right:18px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em;
+    color:#7a6b54;
+  }
+  .s-treasure .copy{position:relative; z-index:2; padding:0 20px}
+  .s-treasure .eyebrow{color:#7a6b54; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.22em; text-transform:uppercase}
+  .s-treasure h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:64px; font-weight:500; line-height:.95;
+    margin:18px 0 22px; color:#1a1814; letter-spacing:-.01em;
+  }
+  .s-treasure h2 em{font-style:italic; color:#8b3a2e; font-weight:400}
+  .s-treasure p{font-size:15px; line-height:1.65; color:#3d352a; margin:0 0 16px; max-width:42ch; text-wrap:pretty}
+  .s-treasure .meta{
+    margin-top:26px; padding-top:18px; border-top:1px solid #1a1814;
+    display:flex; gap:30px;
+  }
+  .s-treasure .meta div .k{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:#7a6b54; margin-bottom:4px}
+  .s-treasure .meta div .v{font-family:'Cormorant Garamond',serif; font-size:18px; color:#1a1814; font-weight:500}
+
+  /* ---------- Dundra collaboration pivot ---------- */
+  .s-dundra-intro{
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(232,184,107,.08) 0%, transparent 60%),
+      linear-gradient(135deg, #2a1a30 0%, #14121f 60%, #0a0a14 100%);
+    padding:90px 80px;
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap:80px;
+    align-items:center;
+    overflow:hidden;
+    position:relative;
+  }
+  .s-dundra-intro::before{
+    content:""; position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(0deg, transparent 0, transparent 79px, rgba(232,184,107,.04) 80px),
+      repeating-linear-gradient(90deg, transparent 0, transparent 79px, rgba(232,184,107,.04) 80px);
+    pointer-events:none;
+  }
+  .s-dundra-intro .text{position:relative; z-index:2}
+  .s-dundra-intro .dundra-logo{
+    width:min(540px, 90%); height:auto;
+    margin-bottom:30px;
+    filter:drop-shadow(0 12px 30px rgba(0,0,0,.5));
+  }
+  .s-dundra-intro p{font-size:17px; line-height:1.7; color:var(--paper-dim); margin:0 0 18px; max-width:48ch; text-wrap:pretty}
+  .s-dundra-intro p strong{color:var(--paper); font-weight:500}
+  .s-dundra-intro .credit-card{
+    margin-top:30px; padding:22px 26px;
+    background:rgba(14,16,20,.7); backdrop-filter:blur(8px);
+    border:1px solid rgba(232,184,107,.3);
+    max-width:460px;
+  }
+  .s-dundra-intro .credit-card .ck{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; display:block}
+  .s-dundra-intro .credit-card .cv{font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--paper); line-height:1.3}
+  .s-dundra-intro .credit-card .cv em{font-style:italic; color:var(--gold); font-weight:400}
+  .s-dundra-intro .credit-card .cs{font-size:13px; color:var(--paper-dim); margin-top:8px; line-height:1.5}
+  .s-dundra-intro .anubis-stage{
+    position:relative; z-index:2;
+    height:calc(100vh - 180px); display:flex; align-items:center; justify-content:center;
+  }
+  .s-dundra-intro .anubis-stage::before{
+    content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:520px; height:520px; border-radius:50%;
+    background:radial-gradient(circle, rgba(232,184,107,.18) 0%, transparent 65%);
+    filter:blur(20px);
+  }
+  .s-dundra-intro .anubis{
+    height:auto; max-height:90%; width:auto; max-width:100%; position:relative;
+    filter:drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 60px rgba(232,184,107,.2));
+  }
+  .s-dundra-intro .corner-mark{
+    position:absolute; top:80px; right:80px; z-index:3;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold);
+    background:rgba(14,16,20,.7); padding:10px 16px;
+    border:1px solid rgba(232,184,107,.4);
+  }
+
+  /* ---------- full-bleed scene slides ---------- */
+  .s-scene{
+    position:relative; background:#000;
+    overflow:hidden;
+  }
+  .s-scene .scene-bg{
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+    background-repeat:no-repeat;
+  }
+  .s-scene .scene-vignette{
+    position:absolute; inset:0;
+    background:
+      radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,.55) 100%),
+      linear-gradient(to top, rgba(0,0,0,.55), transparent 30%, transparent 70%, rgba(0,0,0,.4));
+  }
+  .s-scene .scene-info{
+    position:absolute; left:80px; bottom:120px; right:calc(60% + 20px);
+    max-width:520px;
+    background:rgba(14,16,20,.78);
+    backdrop-filter:blur(8px);
+    border:1px solid rgba(232,184,107,.3);
+    padding:32px 36px;
+  }
+  .s-scene .scene-info .role-eyebrow{margin-bottom:16px; display:block}
+  .s-scene .scene-info h2{font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:500; line-height:.95; margin:0 0 18px; color:var(--paper); letter-spacing:-.01em}
+  .s-scene .scene-info h2 em{font-style:italic; color:var(--gold); font-weight:400}
+  .s-scene .scene-info p{font-size:14px; line-height:1.6; color:var(--paper-dim); margin:0 0 18px; text-wrap:pretty}
+  .s-scene .scene-meta{display:flex; gap:24px; padding-top:18px; border-top:1px solid var(--rule)}
+  .s-scene .scene-meta div{flex:1}
+  .s-scene .scene-meta .k{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:4px}
+  .s-scene .scene-meta .v{font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--paper); font-weight:500}
+  .s-scene .scene-tag{
+    position:absolute; top:80px; right:80px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold);
+    background:rgba(14,16,20,.7); padding:10px 16px;
+    border:1px solid rgba(232,184,107,.4);
+  }
+  .s-scene .scale-rule{
+    position:absolute; right:80px; bottom:120px;
+    display:flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--paper);
+    background:rgba(14,16,20,.7); padding:10px 14px;
+    border:1px solid var(--rule-strong);
+  }
+  .s-scene .scale-rule .bar{width:80px; height:1px; background:var(--gold); position:relative}
+  .s-scene .scale-rule .bar::before, .s-scene .scale-rule .bar::after{
+    content:""; position:absolute; top:-3px; width:1px; height:7px; background:var(--gold);
+  }
+  .s-scene .scale-rule .bar::before{left:0}
+  .s-scene .scale-rule .bar::after{right:0}
+  .s-scene .scene-video{
+    position:absolute; left:calc(40% + 20px); right:80px; top:90px;
+    width:auto; max-width:none;
+    background:rgba(14,16,20,.78);
+    backdrop-filter:blur(8px);
+    border:1px solid rgba(232,184,107,.3);
+    padding:14px;
+  }
+  .s-scene .scene-video .video-label{
+    display:block;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+  }
+  .s-scene .scene-video video{
+    display:block; width:100%;
+    border:1px solid rgba(232,184,107,.15);
+  }
+  .s-scene .scene-game{
+    position:absolute; left:80px; right:80px; top:120px; bottom:80px;
+    display:flex; flex-direction:column;
+    background:rgba(14,16,20,.78);
+    backdrop-filter:blur(8px);
+    border:1px solid rgba(232,184,107,.3);
+    padding:14px;
+  }
+  .s-scene .scene-game .game-label{
+    display:block; flex-shrink:0;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+  }
+  .s-scene .scene-game iframe{
+    display:block; flex:1; min-height:0;
+    border:1px solid rgba(232,184,107,.15);
+  }
+
+  /* ---------- slide 12: 12 Hours of Monsters ---------- */
+  .s-monsters{
+    background:linear-gradient(to right, #d4823a 0%, #6b2a1e 35%, #1e0d28 65%, #080b14 100%);
+  }
+  .s-monsters .monsters-sun{
+    position:absolute; left:-30px; top:50%;
+    transform:translateY(-50%);
+    width:min(360px,40vh); height:min(360px,40vh);
+    opacity:.22; mix-blend-mode:multiply;
+    pointer-events:none; user-select:none;
+  }
+  .s-monsters .monsters-moon{
+    position:absolute; right:-30px; top:50%;
+    transform:translateY(-50%);
+    width:min(360px,40vh); height:min(360px,40vh);
+    opacity:.4; mix-blend-mode:screen;
+    pointer-events:none; user-select:none;
+  }
+  .s-monsters .monsters-sun img,
+  .s-monsters .monsters-moon img{
+    width:100%; height:100%; object-fit:contain; display:block;
+  }
+
+  /* ---------- slide 15: Dundra Map ---------- */
+  .s-map{
+    position:relative; background:var(--ink);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    overflow:hidden;
+    padding-bottom:44px; /* reserve footer height so flex centers the map in the remaining space */
+  }
+  .map-container{
+    position:relative;
+    flex-shrink:0;
+  }
+  .map-img{
+    display:block; width:100%; height:100%;
+    object-fit:fill;
+  }
+  .map-pin{
+    position:absolute;
+    width:34px; height:34px;
+    border-radius:50%;
+    background:rgba(14,16,20,.90);
+    border:2px solid var(--gold);
+    color:var(--gold);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0; line-height:1;
+    transform:translate(-50%,-50%);
+    box-shadow:0 2px 8px rgba(0,0,0,.55);
+    transition:background .15s, color .15s, transform .15s, box-shadow .15s;
+    z-index:5;
+  }
+  .map-pin:hover{
+    background:var(--gold); color:var(--ink);
+    transform:translate(-50%,-50%) scale(1.18);
+    box-shadow:0 2px 8px rgba(0,0,0,.55), 0 0 0 4px rgba(232,184,107,.28);
+  }
+  .map-pin.active{
+    background:var(--paper); color:var(--ink);
+    transform:translate(-50%,-50%) scale(1.1);
+    box-shadow:0 2px 8px rgba(0,0,0,.55), 0 0 0 4px rgba(232,184,107,.4);
+  }
+  .map-tooltip{
+    position:absolute; z-index:20;
+    background:rgba(14,16,20,.96);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(232,184,107,.45);
+    padding:16px;
+    width:480px;
+    max-height:calc(100vh - 28px); /* JS overrides with a precise slide-aware value */
+    overflow:hidden;
+    flex-direction:column; gap:12px;
+    pointer-events:auto;
+    /* hidden state */
+    display:flex;
+    opacity:0; pointer-events:none;
+    transform:translateY(6px);
+    transition:opacity .2s, transform .2s;
+  }
+  .map-tooltip.visible{
+    opacity:1; pointer-events:auto;
+    transform:translateY(0);
+  }
+  .map-tooltip.wide{ width:640px; }
+  .tip-hd{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .tip-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold);
+  }
+  .tip-close{
+    appearance:none; background:transparent;
+    border:1px solid rgba(232,184,107,.3);
+    color:var(--paper-dim);
+    width:22px; height:22px; flex-shrink:0;
+    cursor:pointer; font-size:12px;
+    display:flex; align-items:center; justify-content:center;
+    padding:0; line-height:1; transition:border-color .15s, color .15s;
+  }
+  .tip-close:hover{border-color:var(--gold); color:var(--gold)}
+  .tip-video,.tip-image{
+    display:block; width:100%;
+    flex:1 1 auto; min-height:0;
+    object-fit:contain;
+    border:1px solid rgba(232,184,107,.15);
+    background:#000;
+  }
+  .s-map .map-info{
+    position:absolute; left:80px; bottom:56px; z-index:10;
+    max-width:420px;
+    background:rgba(14,16,20,.78);
+    backdrop-filter:blur(8px);
+    border:1px solid rgba(232,184,107,.3);
+    padding:32px 36px;
+  }
+  .s-map .map-info h2{
+    font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:500;
+    line-height:.95; margin:0 0 14px; color:var(--paper); letter-spacing:-.01em;
+    display:flex; align-items:center; gap:14px;
+  }
+  .s-map .map-info .map-info-logo{
+    height:1em; width:auto;
+    filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));
+  }
+  .s-map .map-info p{
+    font-size:14px; line-height:1.6; color:var(--paper-dim); margin:0; text-wrap:pretty;
+  }
+  .map-tag{
+    position:absolute; top:80px; right:80px; z-index:10;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold);
+    background:rgba(14,16,20,.7); padding:10px 16px;
+    border:1px solid rgba(232,184,107,.4);
+  }
+  .map-footer{
+    position:absolute; bottom:0; left:0; right:0;
+    height:44px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 80px;
+    background:rgba(14,16,20,.72);
+    border-top:1px solid rgba(232,184,107,.2);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--paper-dim);
+    z-index:10; flex-shrink:0;
+  }
+  .map-footer-arrow{
+    display:flex; align-items:center; gap:10px; color:var(--gold);
+  }
+  .map-footer-arrow .arr-track{
+    width:100px; height:1px;
+    background:linear-gradient(to right, var(--gold-deep), var(--gold));
+    position:relative;
+  }
+  .map-footer-arrow .arr-track::after{
+    content:"▶"; position:absolute; right:-8px; top:50%;
+    transform:translateY(-50%); font-size:7px; color:var(--gold);
+  }
+  .map-route{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    pointer-events:none; z-index:2; overflow:visible;
+  }
+
+  /* ---------- contact / end ---------- */
+  .s-end{
+    background:
+      radial-gradient(ellipse at center, rgba(232,184,107,.08), transparent 60%),
+      var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    padding:80px;
+    position:relative;
+  }
+  .s-end::before{
+    content:""; position:absolute; inset:60px;
+    border:1px solid var(--rule);
+  }
+  .s-end .card{
+    text-align:center; max-width:780px; position:relative; z-index:1;
+  }
+  .s-end .role-eyebrow{margin-bottom:32px; display:block}
+  .s-end h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(64px, 7vw, 120px); font-weight:500;
+    line-height:.95; margin:0 0 32px; color:var(--paper); letter-spacing:-.015em;
+  }
+  .s-end h2 em{font-style:italic; color:var(--gold); font-weight:400}
+  .s-end .lede{font-size:18px; line-height:1.55; color:var(--paper-dim); max-width:52ch; margin:0 auto 48px; text-wrap:pretty}
+  .s-end .links{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:48px}
+  .s-end .lnk{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 22px; border:1px solid var(--rule-strong);
+    color:var(--paper); text-decoration:none;
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    transition:all .25s; background:rgba(232,184,107,.02);
+  }
+  .s-end .lnk:hover{border-color:var(--gold); color:var(--gold); background:rgba(232,184,107,.08); transform:translateY(-2px)}
+  .s-end .lnk.primary{border-color:var(--gold); color:var(--gold); background:rgba(232,184,107,.08)}
+  .s-end .lnk.primary:hover{background:var(--gold); color:var(--ink)}
+  .s-end .colophon{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--paper-dim); opacity:.6;
+  }
+
+  /* ---------- table of contents on intro ---------- */
+  /* TOC removed from intro to avoid collision; chapters live in top nav */
+
+  /* ---------- decorative side index ---------- */
+  .side-idx{
+    position:absolute; right:24px; top:50%; transform:translateY(-50%) rotate(90deg); transform-origin:right center;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.4em;
+    color:var(--paper-dim); opacity:.5;
+    pointer-events:none;
+  }
+
+  /* loader */
+  .loader{
+    position:fixed; inset:0; background:var(--ink); z-index:200;
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity .8s; pointer-events:none;
+  }
+  .loader.hide{opacity:0}
+  .loader .lg{font-family:'Cormorant Garamond',serif; font-size:42px; color:var(--gold); font-style:italic}
+  .loader .lg::after{content:" ▍"; animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ============================================================
+     MOBILE  (≤ 768 px)
+     ============================================================ */
+  @media (max-width:768px){
+
+    /* -- chrome -- */
+    .top-bar{padding:12px 16px}
+    .brand .glyph{width:22px;height:22px;font-size:12px}
+    .brand .who{font-size:14px}
+    .nav-mono{display:none}
+    .bottom-bar{padding:10px 14px 16px;gap:8px}
+    .counter{font-size:18px;min-width:48px;gap:3px}
+    .counter .total,.counter .sep{font-size:13px}
+    .scrubber{display:none}
+    .slide-title-btn{
+      display:flex; align-items:center; gap:8px; flex:1; min-width:0;
+      background:transparent; border:none; cursor:pointer; padding:7px 10px;
+      text-align:left; border-radius:3px;
+      transition:background .15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .slide-title-btn:active{background:rgba(255,255,255,.06)}
+    .slide-title-btn .btn-title{
+      font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.16em;
+      text-transform:uppercase; color:var(--paper);
+      flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    .slide-title-btn .btn-chevron{
+      color:var(--gold); font-size:10px; flex-shrink:0;
+      transition:transform .2s;
+    }
+    .slide-title-btn[aria-expanded="true"] .btn-chevron{transform:rotate(180deg)}
+    .arrow-btn{width:34px;height:34px}
+    .hint{font-size:0;bottom:74px}
+    .hint::after{content:"Swipe ← →";font-size:9px;letter-spacing:.2em;font-family:'JetBrains Mono',monospace;text-transform:uppercase}
+    .side-idx{display:none}
+
+    /* -- slide base: allow vertical scroll inside each slide -- */
+    .slide{overflow-y:auto}
+
+    /* -- 01 intro -- */
+    .s-intro{grid-template-columns:1fr}
+    .s-intro .right{display:none}
+    .s-intro .left{
+      padding:80px 24px 90px;
+      justify-content:flex-start;
+    }
+    .s-intro .left::before{display:none}
+    .s-intro .left .pad{padding-left:0}
+    .s-intro h1{font-size:clamp(56px,16vw,88px);margin-bottom:14px}
+    .s-intro .lede{font-size:15px}
+    .s-intro .meta{flex-direction:column;gap:14px;margin-top:20px}
+    .s-intro .meta .v{font-size:18px}
+
+    /* -- 02 role overview -- */
+    .s-role{grid-template-columns:1fr;padding:80px 24px 80px;align-content:start;gap:0}
+    .s-role .col-l{
+      padding-right:0;border-right:none;
+      border-bottom:1px solid var(--rule);
+      padding-bottom:28px;margin-bottom:28px;
+    }
+    .s-role .col-r{padding-left:0}
+    .s-role h2{font-size:clamp(42px,13vw,70px);margin-top:12px}
+    .s-role .lede{font-size:15px;margin-top:16px}
+    .stat .num{font-size:54px}
+    .stat .num small{font-size:22px}
+    .stat-grid{gap:20px 14px;margin-top:18px}
+    .award-row{flex-direction:column;gap:12px;margin-top:24px}
+
+    /* -- 03/05/07 case studies -- */
+    .s-case{grid-template-columns:1fr}
+    .s-case .visual{display:none}
+    .s-case .info{padding:80px 24px 80px;justify-content:flex-start}
+    .s-case h2{font-size:clamp(40px,12vw,68px);margin-bottom:14px}
+    .s-case .lede{font-size:15px}
+    .s-case ul{margin-top:18px;gap:10px}
+    .case-meta{margin-top:24px;gap:16px;grid-template-columns:repeat(3,1fr);max-width:100%}
+    .case-meta .v{font-size:17px}
+
+    /* -- 04/06/08 testimonials -- */
+    .s-quote{padding:80px 24px}
+    .s-quote .quote-mark{font-size:150px;left:8px;top:28px}
+    .s-quote .body{grid-template-columns:1fr;gap:22px;max-width:100%;width:100%}
+    .s-quote blockquote{font-size:clamp(19px,5.5vw,28px)}
+
+    /* -- 09 side projects pivot -- */
+    .s-pivot{grid-template-columns:1fr;padding:0 24px;align-items:start;align-content:start}
+    .s-pivot .text{padding-right:0;padding-top:80px}
+    .s-pivot h2{font-size:clamp(52px,15vw,90px)}
+    .s-pivot .anubis-stage{height:42vh}
+    .s-pivot .glyph-marks{display:none}
+
+    /* -- 10 bestiary -- */
+    .s-bestiary{
+      grid-template-columns:1fr;
+      padding:52px 22px 52px;
+      gap:12px;
+    }
+    .s-bestiary::before{
+      inset:14px;
+      box-shadow:inset 0 0 0 4px #f4ece0,inset 0 0 0 5px #1a1814;
+    }
+    .s-bestiary .col-l{padding-left:14px;padding-top:8px}
+    .s-bestiary h2{font-size:44px;margin:10px 0 12px}
+    .s-bestiary p{font-size:14px;max-width:100%;margin-bottom:10px}
+    .s-bestiary .grid{padding-right:14px;padding-top:0}
+
+    /* -- 11 treasure -- */
+    .s-treasure{
+      grid-template-columns:1fr 1fr;
+      padding:60px 18px 60px;
+      gap:16px;
+    }
+    .s-treasure::before{inset:14px}
+    .s-treasure .stage{height:32vh}
+    .s-treasure .copy{grid-column:1 / -1;padding:0}
+    .s-treasure h2{font-size:40px;margin:10px 0 12px}
+    .s-treasure p{font-size:14px}
+    .s-treasure .meta{gap:18px}
+
+    /* -- 13 dundra intro -- */
+    .s-dundra-intro{
+      grid-template-columns:1fr;
+      padding:60px 24px 40px;
+      gap:12px;
+    }
+    .s-dundra-intro .dundra-logo{width:min(280px,80%);margin-bottom:10px}
+    .s-dundra-intro p{font-size:15px;margin-bottom:10px}
+    .s-dundra-intro .credit-card{margin-top:14px}
+    .s-dundra-intro .anubis-stage{height:36vh}
+    .s-dundra-intro .anubis-stage::before{width:220px;height:220px}
+    .s-dundra-intro .corner-mark{top:56px;right:16px;font-size:9px;padding:7px 12px}
+
+    /* -- 12/14/15 full-bleed scenes -- */
+    .s-scene .scene-info{
+      left:16px !important;
+      right:16px !important;
+      bottom:88px;
+      padding:18px 18px;
+    }
+    .s-scene .scene-info h2{font-size:28px}
+    .s-scene .scene-meta{gap:10px;flex-wrap:wrap}
+    .s-scene .scene-tag{top:56px;right:16px;font-size:9px;padding:7px 12px}
+    .s-scene .scale-rule{display:none}
+    .s-scene .scene-video{display:none}
+    .s-scene .scene-game{display:none}
+
+    /* -- 14 Dundra map -- */
+    .s-map .map-info{left:16px;bottom:72px;padding:16px 20px;max-width:calc(100% - 32px)}
+    .s-map .map-info h2{font-size:28px;gap:8px}
+    .map-tag{top:56px;right:16px;font-size:9px;padding:7px 12px}
+    .map-footer{padding:0 16px;font-size:8px}
+    .map-footer-arrow .arr-track{width:50px}
+    /* On mobile the tooltip becomes a fixed bottom drawer */
+    .map-tooltip{
+      position:fixed;
+      bottom:0; left:0; right:0;
+      top:auto !important;
+      width:auto !important;
+      max-height:60vh;
+      overflow-y:auto;
+      border-left:none; border-right:none; border-bottom:none;
+      border-radius:0;
+      padding:16px 20px;
+      /* Override desktop fade; use slide-up instead */
+      transform:translateY(100%);
+      transition:opacity .25s, transform .25s;
+      opacity:1;
+    }
+    .map-tooltip.visible{
+      transform:translateY(0);
+      opacity:1;
+    }
+    /* Larger tap targets on mobile */
+    .map-pin{width:38px; height:38px; font-size:14px}
+    .tip-video{max-height:38vh}
+
+    /* -- 15 contact / end -- */
+    .s-end{padding:80px 24px}
+    .s-end::before{inset:18px}
+    .s-end h2{font-size:clamp(42px,13vw,78px)}
+    .s-end .lede{font-size:15px;margin-bottom:30px}
+    .s-end .links{gap:10px}
+    .s-end .lnk{padding:11px 14px;font-size:10px;letter-spacing:.12em}
+
+    /* tweaks panel: full-width on phones */
+    .twk-panel{right:8px;left:8px;width:auto;bottom:74px}
+  }
+
+</style>
+</head>
+<body>
+  <div class="loader" id="loader"><div class="lg">eb.</div></div>
+
+  <div class="rail" id="rail">
+
+    <!-- 01 INTRO -->
+    <section class="slide s-intro" data-screen-label="01 Intro" data-title="Intro">
+      <div class="left">
+        <div class="pad">
+          <span class="eyebrow">Portfolio · 2014 — 2026</span>
+          <h1 class="display">Hi, I'm<br/><em>Eric.</em></h1>
+          <p class="lede">A creatively-driven tech enthusiast, perpetual designer, and app developer based in <strong>New York</strong>. I make things that bring people and ideas together — from iOS at scale, to game art and worldbuilding on the side.</p>
+          <div class="meta">
+            <div>
+              <span class="mono k">Discipline</span>
+              <span class="v">iOS · Design · Game Art</span>
+            </div>
+            <div>
+              <span class="mono k">Currently</span>
+              <span class="v">Tech Lead, E*TRADE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="portrait-frame">
+          <img class="photo" src="assets/erk.png" alt="Eric Burger — portrait at Horseshoe Bend"/>
+          <div class="caption">
+            <span class="label">Eric Burger · 2026</span>
+            <span class="sub">N · 36.8791°  W · 111.5104°</span>
+          </div>
+        </div>
+        <div class="corner-marks"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+        <div class="side-idx">N · 40.7128°  W · 74.0060°</div>
+      </div>
+    </section>
+
+    <!-- 02 ROLE OVERVIEW -->
+    <section class="slide s-role" data-screen-label="02 iOS Developer" data-title="iOS Developer">
+      <div class="col-l">
+        <span class="eyebrow">Chapter I · The Day Job</span>
+        <h2 class="display">iOS<br/><em>Developer.</em></h2>
+        <p class="lede">A decade of building award-winning applications and software solutions for Fortune 500 companies — specialising in iOS and Apple's development ecosystem.</p>
+        <div class="stack">
+          <span class="chip gold">Swift</span>
+          <span class="chip gold">SwiftUI</span>
+          <span class="chip">UIKit</span>
+          <span class="chip">Combine</span>
+          <span class="chip">Async / Await</span>
+          <span class="chip">AVFoundation</span>
+          <span class="chip">XCTest</span>
+          <span class="chip">MVVM</span>
+        </div>
+      </div>
+      <div class="col-r">
+        <span class="eyebrow">By the numbers</span>
+        <div class="stat-grid" style="margin-top:24px">
+          <div class="stat"><div class="num">10<small>+</small></div><div class="lbl">Years shipping iOS</div></div>
+          <div class="stat"><div class="num">3</div><div class="lbl">Fortune-500 clients</div></div>
+          <div class="stat"><div class="num">M+<small></small></div><div class="lbl">Daily active users</div></div>
+          <div class="stat"><div class="num">1<small>st</small></div><div class="lbl">Firm-wide AI hackathon</div></div>
+        </div>
+        <div class="award-row">
+          <div class="award">
+            <div class="laurel">❦</div>
+            <div class="text"><strong>Recognition</strong>#1 in Research — Kiplinger's<br/>#1 Investor App — StockBrokers.com</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 E*TRADE -->
+    <section class="slide s-case" data-screen-label="03 E*TRADE" data-title="E*TRADE">
+      <div class="info">
+        <span class="eyebrow">Case Study · 01 of 03</span>
+        <div class="row" style="margin-top:18px">
+          <span class="role-tag">Tech Lead · iOS</span>
+          <span class="role-tag" style="color:var(--gold)">2021 — Present</span>
+        </div>
+        <h2><em>E*TRADE</em><br/>from Morgan Stanley</h2>
+        <p class="lede">Banking and trading for everyone. Stream live ticker data, build portfolios and watch lists, and track your finances — for day traders, retirement investors, and everyone in between.</p>
+        <ul>
+          <li>Deliver new features for the iOS app, integrating modern Swift like <strong>structured concurrency</strong> and declarative APIs for networking and dependency injection.</li>
+          <li>Shareable code and components across mobile apps — <strong>reuse and extension</strong> through every workflow, not bespoke one-off designs.</li>
+          <li>Lead developers and partner with PMO, Design, and QA across the client platforms organisation.</li>
+          <li>Took our team to <strong>1st place</strong> in the firm-wide AI hackathon; presented the solution to the CTO.</li>
+        </ul>
+        <div class="case-meta">
+          <div><div class="k">Stack</div><div class="v">Swift · SwiftUI</div></div>
+          <div><div class="k">Team</div><div class="v">12+ engineers</div></div>
+          <div><div class="k">Reach</div><div class="v">Millions DAU</div></div>
+        </div>
+      </div>
+      <div class="visual" style="--bg-a:#1a1530; --bg-b:#050810">
+        <div class="img-frame" style="padding:0; background:radial-gradient(ellipse at 60% 40%, #2a2050 0%, #0a0e16 60%, #050810 100%)">
+          <div class="phone-real">
+            <div class="notch-real"></div>
+            <div class="glass"><img src="assets/IMG_CDF6D8F5DB62-1.jpeg" alt="E*TRADE iOS app — Trade. Invest. Save." loading="lazy"/></div>
+            <div class="caption">Trade · Invest · Save</div>
+          </div>
+        </div>
+        <div class="stamp">FIG. 01 · iOS APP</div>
+        <div class="corner"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+      </div>
+    </section>
+
+    <!-- 04 E*TRADE TESTIMONIAL -->
+    <section class="slide s-quote" data-screen-label="04 Quote — Adam Levy" data-title="Adam Levy">
+      <div class="quote-mark">"</div>
+      <div class="body">
+        <div class="who-card">
+          <span class="eyebrow role-eyebrow">Testimonial</span>
+          <div class="nm">Adam Levy</div>
+          <div class="ti">Senior iOS Engineer<br/><em>E*TRADE from Morgan Stanley</em></div>
+        </div>
+        <blockquote>
+          Eric is a great person to work with and an accomplished iOS developer. <span class="pull">On a large-scale project that required re-architecting the app using SwiftUI</span>, Eric showed lots of enthusiasm learning SwiftUI and was a vital contributor to the project despite all of its technical challenges.
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- 05 REDBOX -->
+    <section class="slide s-case" data-screen-label="05 Redbox" data-title="Redbox">
+      <div class="info">
+        <span class="eyebrow">Case Study · 02 of 03</span>
+        <div class="row" style="margin-top:18px">
+          <span class="role-tag">Senior iOS Engineer</span>
+          <span class="role-tag" style="color:var(--gold)">2018 — 2021</span>
+        </div>
+        <h2><em>Redbox.</em><br/>Movies, games, live TV.</h2>
+        <p class="lede">Rent movies, play games, and stream live TV. I worked closely with designers and vendors to build media-streaming features — using AVFoundation, UIKit, and Apple's Human Interface Guidelines.</p>
+        <ul>
+          <li>Architected new features including <strong>4K DVD reservations</strong>, perks, streaming, downloads, and live TV.</li>
+          <li>Designed <strong>DRM logic</strong> for the content playback SDK.</li>
+          <li>Drove development of features with behaviour-driven tests using XCTest.</li>
+        </ul>
+        <div class="case-meta">
+          <div><div class="k">Stack</div><div class="v">UIKit · AVFoundation</div></div>
+          <div><div class="k">Focus</div><div class="v">Streaming · DRM</div></div>
+          <div><div class="k">Process</div><div class="v">BDD · XCTest</div></div>
+        </div>
+      </div>
+      <div class="visual" style="--bg-a:#1a0e10; --bg-b:#0a0608">
+        <div class="img-frame" style="padding:0; background:radial-gradient(ellipse at 50% 40%, #3a1218 0%, #1a0e10 55%, #0a0608 100%)">
+          <div class="phone-real">
+            <div class="notch-real"></div>
+            <div class="glass"><img src="assets/IMG_1134.PNG" alt="Redbox iOS app — Stream New Movies & Thousands More" loading="lazy"/></div>
+            <div class="caption">Stream · Rent · Live</div>
+          </div>
+        </div>
+        <div class="stamp">FIG. 02 · STREAMING</div>
+        <div class="corner"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+      </div>
+    </section>
+
+    <!-- 06 REDBOX TESTIMONIAL -->
+    <section class="slide s-quote" data-screen-label="06 Quote — Rob Kern" data-title="Rob Kern">
+      <div class="quote-mark">"</div>
+      <div class="body">
+        <div class="who-card">
+          <span class="eyebrow role-eyebrow">Testimonial</span>
+          <div class="nm">Rob Kern</div>
+          <div class="ti">Product Manager, Mobile<br/><em>Redbox</em></div>
+        </div>
+        <blockquote>
+          Eric has shown passion, leadership, and a desire to learn. <span class="pull">When our Tech Leadership team decided to move our network calls to a new solution, Eric was the first one on the iOS group to step in</span> — he worked tirelessly, with little information or training, and developed a solution that works well for our app. He is always eager to help when a new problem arises and has a great relationship with Product, UX, and the rest of the team.
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- 07 ALLSTATE -->
+    <section class="slide s-case" data-screen-label="07 Allstate" data-title="Allstate">
+      <div class="info">
+        <span class="eyebrow">Case Study · 03 of 03</span>
+        <div class="row" style="margin-top:18px">
+          <span class="role-tag">iOS Engineer</span>
+          <span class="role-tag" style="color:var(--gold)">2014 — 2018</span>
+        </div>
+        <h2><em>Allstate.</em><br/>Connected Car.</h2>
+        <p class="lede">Presents trip events and visualises driving data. Surfaces vehicle diagnostics — engine and maintenance alerts — and provides detailed trip histories.</p>
+        <ul>
+          <li>My first foray into mobile development from web apps. Grew with mentors, learning <strong>foundational iOS APIs</strong> and MVVM architectural patterns.</li>
+          <li>Steadily became a leader on the mobile team — supporting engineering culture through <strong>demos, mentorship</strong>, and cross-team collaboration.</li>
+          <li>Delivered solutions for the connected car platform that surfaces vehicle diagnostics and trip histories.</li>
+        </ul>
+        <div class="case-meta">
+          <div><div class="k">Stack</div><div class="v">Objective-C · Swift</div></div>
+          <div><div class="k">Pattern</div><div class="v">MVVM</div></div>
+          <div><div class="k">Domain</div><div class="v">Telematics</div></div>
+        </div>
+      </div>
+      <div class="visual" style="--bg-a:#0d1822; --bg-b:#050810">
+        <div class="img-frame" style="padding:0; background:radial-gradient(ellipse at 50% 40%, #16283d 0%, #0d1822 55%, #050810 100%)">
+          <div class="phone-real">
+            <div class="notch-real"></div>
+            <div class="glass"><img src="assets/IMG_1143.PNG" alt="Allstate Connected Car — trip time, mileage, location & driving events" loading="lazy"/></div>
+            <div class="caption">Trip · Telematics</div>
+          </div>
+        </div>
+        <div class="stamp">FIG. 03 · TELEMATICS</div>
+        <div class="corner"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+      </div>
+    </section>
+
+    <!-- 08 ALLSTATE TESTIMONIAL -->
+    <section class="slide s-quote" data-screen-label="08 Quote — Sam Sheftel" data-title="Sam Sheftel">
+      <div class="quote-mark">"</div>
+      <div class="body">
+        <div class="who-card">
+          <span class="eyebrow role-eyebrow">Testimonial</span>
+          <div class="nm">Sam Sheftel</div>
+          <div class="ti">Lead Engineer<br/><em>Allstate</em></div>
+        </div>
+        <blockquote>
+          Eric brings <span class="pull">great passion and creativity</span> to the work that he does, as well as maintaining great rapport with other departments. He played a big part in supporting the engineering culture at the company — whether giving a demonstration or taking the time to answer a question for a colleague, Eric excelled in communicating and helping his peers.
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- 09 SIDE PROJECTS — Eric's own game art pivot -->
+    <section class="slide s-pivot" data-screen-label="09 After Hours" data-title="After Hours">
+      <div class="text">
+        <span class="eyebrow">Chapter III · After Hours</span>
+        <h2>When the<br/>compiler<br/><em>goes quiet.</em></h2>
+        <p class="body">When I'm not shipping iOS, I'm probably drawing or spinning up other projects. I keep a small bestiary of hand-drawn monsters, icons, and totems — drawn for a series of personal game prototypes.</p>
+      </div>
+      <div class="anubis-stage">
+        <img class="anubis" src="assets/Untitled_Artwork 5.gif" alt="Animated chest illustration" style="height:80%; filter:drop-shadow(0 30px 40px rgba(0,0,0,.5)) drop-shadow(0 0 60px rgba(232,184,107,.15))"/>
+        <div class="glyph-marks"></div>
+      </div>
+      <div class="side-idx" style="color:var(--gold); opacity:.7">PERSONAL · ERIC BURGER</div>
+    </section>
+
+    <!-- 10 BESTIARY GRID — Eric's own B&W icons -->
+    <section class="slide s-bestiary" data-screen-label="10 Bestiary" data-title="Bestiary">
+      <div class="col-l">
+        <span class="eyebrow">Plate I · Iconography</span>
+        <h2>A small<br/><em>bestiary.</em></h2>
+        <p>Six icons from a personal workbook of assets — sun and moon, life and death, totems and scrolls.</p>
+        <p>The set is the visual vocabulary for a small turn-based prototype I've been chipping away at - <em>12 Hours of Monsters.</em></p>
+        <div class="credit">Drawn by <strong>Eric Burger</strong> · 2024</div>
+      </div>
+      <div class="grid">
+        <div class="cel" data-slot="1">
+          <span class="num">001</span>
+          <img src="assets/sun.png" alt="Sun"/>
+          <span class="lbl">Sol</span>
+        </div>
+        <div class="cel" data-slot="2">
+          <span class="num">002</span>
+          <img src="assets/moon.png" alt="Moon"/>
+          <span class="lbl">Luna</span>
+        </div>
+        <div class="cel dark" data-slot="3">
+          <span class="num">003</span>
+          <img src="assets/plaque2.png" alt="Scroll plaque with eyes"/>
+          <span class="lbl">Scroll · I</span>
+        </div>
+        <div class="cel dark" data-slot="4">
+          <span class="num">004</span>
+          <img src="assets/skelly.png" alt="Skelly"/>
+          <span class="lbl">Curse</span>
+        </div>
+        <div class="cel" data-slot="5">
+          <span class="num">005</span>
+          <img src="assets/plaque4.png" alt="Stone plaque with faces"/>
+          <span class="lbl">Plaque · II</span>
+        </div>
+        <div class="cel" data-slot="6">
+          <span class="num">006</span>
+          <img src="assets/card-back.png" alt="card-back"/>
+          <span class="lbl">Card Back</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 TREASURE — chest spread -->
+    <!-- 12 TWELVE HOURS OF MONSTERS — game demo -->
+    <section class="slide s-scene s-monsters" data-screen-label="12 Monsters" data-title="12 Hrs of Monsters">
+      <div class="monsters-sun"><img src="assets/sun-full.png" alt="Sun — day phase"/></div>
+      <div class="monsters-moon"><img src="assets/moon-full.png" alt="Moon — night phase"/></div>
+      <div class="scene-vignette"></div>
+      <div class="scene-tag">After Hours · 12 Hours of Monsters</div>
+      <div class="scene-game">
+        <span class="game-label">Interactive Demo · HTML5</span>
+        <iframe src="https://html-classic.itch.zone/html/17509584/index.html" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share" allowtransparency="true"></iframe>
+      </div>
+      <div class="scale-rule"><span class="bar"></span><span>12 Hours of Monsters</span></div>
+    </section>
+
+    <!-- 13 DUNDRA INTRO — collaboration -->
+    <section class="slide s-dundra-intro" data-screen-label="13 Dundra" data-title="Dundra">
+      <div class="corner-mark">Collaboration</div>
+      <div class="text">
+        <img class="dundra-logo" src="assets/logo.png" alt="Dundra logotype"/>
+        <p><strong>Dundra</strong> is a small dungeon-crawl side project I've been engineering with a friend. I designed and programmed the game, and I collaborated with a partner who made the digital art and assets.</p>
+        <p>The next two slides include assets built by them — included with permission. Engineering work and game design are my own.</p>
+        <div class="credit-card">
+          <span class="ck">Art Direction & Illustration</span>
+          <div class="cv">By <em>my collaborator</em></div>
+          <div class="cs">All Dundra characters, environments, and the wordmark above were created by my project partner — credited where their work appears.</div>
+        </div>
+      </div>
+      <div class="anubis-stage">
+        <img class="anubis" src="assets/anubis.gif" alt="Anubis character — animated, by collaborator"/>
+      </div>
+    </section>
+
+    <!-- 14 DUNDRA CAVE FULL-BLEED -->
+    <section class="slide s-scene" data-screen-label="14 Dundra · Cave" data-title="Dundra · Cave">
+      <div class="scene-bg" style="background-image:url('assets/cave.jpg')"></div>
+      <div class="scene-vignette"></div>
+      <div class="scene-tag">Dundra · Environment 02</div>
+      <div class="scene-game">
+        <span class="game-label">Interactive Demo · Unity WebGL</span>
+        <iframe src="https://html-classic.itch.zone/html/17493814/web-build-4/index.html" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share" allowtransparency="true"></iframe>
+      </div>
+      <div class="scale-rule"><span class="bar"></span><span>Dundra</span></div>
+    </section>
+
+    <!-- 15 DUNDRA MAP -->
+    <section class="slide s-map" data-screen-label="15 Dundra · Map" data-title="Dundra · Map">
+
+      <div class="map-container" id="mapContainer">
+        <img src="assets/map/Map_complete.jpg" class="map-img" alt="Dundra world map" draggable="false" />
+
+        <!-- Travel route connecting pins 1–11 in sequence -->
+        <svg class="map-route" aria-hidden="true">
+          <defs>
+            <!-- feTurbulence seed is fixed so the wobbly shape is stable across redraws -->
+            <filter id="quillStroke" x="-10%" y="-60%" width="120%" height="220%" color-interpolation-filters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.07 0.025" numOctaves="5" seed="42" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="warped"/>
+              <!-- Slight blur simulates ink spreading into the paper fibers -->
+              <feGaussianBlur in="warped" stdDeviation="0.4"/>
+            </filter>
+            <filter id="quillBloom" x="-10%" y="-60%" width="120%" height="220%" color-interpolation-filters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.07 0.025" numOctaves="5" seed="42" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.2" xChannelSelector="R" yChannelSelector="G" result="warped"/>
+              <!-- Heavier blur creates the ink-bleed halo around each dash -->
+              <feGaussianBlur in="warped" stdDeviation="3" result="bloom"/>
+              <feComponentTransfer in="bloom">
+                <feFuncA type="linear" slope="0.18"/>
+              </feComponentTransfer>
+            </filter>
+          </defs>
+          <!-- Ink-bleed halo — thicker, blurred, low opacity -->
+          <polyline id="mapRouteBloom" fill="none" stroke="#c0392b" stroke-width="9" stroke-dasharray="14,8" stroke-linecap="round" stroke-linejoin="round" filter="url(#quillBloom)"/>
+          <!-- Main quill stroke — displaced + edge-roughened -->
+          <polyline id="mapRoute" fill="none" stroke="#c0392b" stroke-width="4" stroke-dasharray="14,8" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" filter="url(#quillStroke)"/>
+        </svg>
+
+        <!-- Pins 1–11, left→right = chronological player progression.
+             data-x / data-y are % of map image dimensions, positioned by JS. -->
+        <button class="map-pin" data-num="1"  data-x="7"  data-y="12" data-video="assets/map/1.mp4">1</button>
+        <button class="map-pin" data-num="2"  data-x="17" data-y="63" data-video="assets/map/2.mov">2</button>
+        <button class="map-pin" data-num="3"  data-x="32" data-y="55" data-video="assets/map/3.png">3</button>
+        <button class="map-pin" data-num="4"  data-x="38" data-y="70" data-video="assets/map/4.mov">4</button>
+        <button class="map-pin" data-num="5"  data-x="42" data-y="33" data-video="assets/map/5.mov">5</button>
+        <button class="map-pin" data-num="6"  data-x="53" data-y="23" data-video="assets/map/6.mov">6</button>
+        <button class="map-pin" data-num="7"  data-x="53" data-y="69" data-video="assets/map/7.mov">7</button>
+        <button class="map-pin" data-num="8"  data-x="68" data-y="42" data-video="assets/map/8.mov">8</button>
+        <button class="map-pin" data-num="9"  data-x="83" data-y="16" data-video="assets/map/9.mov">9</button>
+        <button class="map-pin" data-num="10" data-x="86" data-y="65" data-video="assets/map/10.mov">10</button>
+
+        <!-- Shared tooltip, repositioned by JS on each pin click -->
+        <div class="map-tooltip" id="mapTooltip">
+          <div class="tip-hd">
+            <span class="tip-label" id="tipLabel">Step 01 · Dundra</span>
+            <button class="tip-close" id="tipClose" aria-label="Close">✕</button>
+          </div>
+          <video class="tip-video" id="tipVideo" controls playsinline muted></video>
+          <img class="tip-image" id="tipImage" alt="" style="display:none" />
+        </div>
+      </div>
+
+      <div class="map-info">
+        <h2>Making&nbsp;<img class="map-info-logo" src="assets/logo.png" alt="Dundra"/></h2>
+        <p>The journey of developing the game, from concept to demo.</p>
+      </div>
+      <div class="map-tag">Dundra · Creation Process</div>
+
+      <div class="map-footer">
+        <span>World Design · Steps 01 – 10</span>
+        <span class="map-footer-arrow">
+          Start&nbsp;&nbsp;<span class="arr-track"></span>&nbsp;&nbsp;Finish
+        </span>
+      </div>
+
+    </section>
+
+    <!-- 16 END / CONTACT -->
+    <section class="slide s-end" data-screen-label="16 Get in Touch" data-title="Get in Touch">
+      <div class="card">
+        <span class="eyebrow role-eyebrow">Chapter IV · Fin.</span>
+        <h2>Let's<br/><em>build something.</em></h2>
+        <p class="lede">I aspire to join teams that think forward — supporting each other in pushing the bounds of creativity and technology. If that sounds like yours, I'd love to hear about it.</p>
+        <div class="links">
+          <a class="lnk primary" href="mailto:hello@example.com">✉  hello@eburger.dev</a>
+          <a class="lnk" href="#">↗ LinkedIn</a>
+          <a class="lnk" href="#">↗ GitHub</a>
+          <a class="lnk" href="#">↗ ArtStation</a>
+        </div>
+        <div class="colophon">Designed & built by Eric Burger · New York · MMXXVI</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- chrome -->
+  <div class="chrome">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="glyph">e</div>
+        <div class="who"><em>Eric Burger</em> · <span style="color:var(--paper-dim)">Portfolio</span></div>
+      </div>
+      <div class="nav-mono" id="navMono"></div>
+    </div>
+    <div class="bottom-bar">
+      <div class="counter">
+        <span id="cur">01</span><span class="sep">/</span><span class="total" id="tot">12</span>
+      </div>
+      <button class="slide-title-btn" id="slideTitleBtn" aria-expanded="false" aria-haspopup="dialog" aria-controls="navOverlay">
+        <span class="btn-title" id="slideTitle"></span>
+        <span class="btn-chevron" aria-hidden="true">▾</span>
+      </button>
+      <div class="scrubber" id="scrubber">
+        <div class="scrubber-track"></div>
+        <div class="scrubber-marks" id="marks"></div>
+        <div class="scrubber-label" id="scrubberLabel"></div>
+      </div>
+      <div class="arrows">
+        <button class="arrow-btn" id="prev" aria-label="Previous">←</button>
+        <button class="arrow-btn" id="next" aria-label="Next">→</button>
+      </div>
+    </div>
+    <div class="hint">Scroll · Drag · ← → keys</div>
+  </div>
+
+  <div class="nav-overlay" id="navOverlay" role="dialog" aria-label="Slide navigation" aria-hidden="true">
+    <div class="nav-overlay-sheet">
+      <div class="nav-overlay-handle" id="navOverlayHandle"></div>
+      <div class="nav-overlay-header">
+        <span class="nav-overlay-eyebrow">Navigate</span>
+        <button class="nav-overlay-close" id="navOverlayClose" aria-label="Close navigation">✕</button>
+      </div>
+      <div class="nav-overlay-list" id="navOverlayList"></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const rail = document.getElementById('rail');
+  const slides = [...rail.querySelectorAll('.slide')];
+  const total = slides.length;
+  const cur = document.getElementById('cur');
+  const tot = document.getElementById('tot');
+  const marks = document.getElementById('marks');
+  const scrubber = document.getElementById('scrubber');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const navMono = document.getElementById('navMono');
+  const slideTitleBtn = document.getElementById('slideTitleBtn');
+  const slideTitle = document.getElementById('slideTitle');
+  const navOverlay = document.getElementById('navOverlay');
+  const navOverlayList = document.getElementById('navOverlayList');
+
+  tot.textContent = String(total).padStart(2,'0');
+
+  // build marks
+  for(let i=0; i<total; i++){
+    const m = document.createElement('button');
+    m.type = 'button';
+    m.className = 'scrubber-mark';
+    m.style.left = (i / (total-1) * 100) + '%';
+    const label = slides[i].dataset.screenLabel || slides[i].dataset.title || String(i+1);
+    m.setAttribute('aria-label', 'Go to ' + label);
+    m.dataset.idx = i;
+    m.dataset.label = label;
+    m.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
+    marks.appendChild(m);
+  }
+
+  // build top nav (chapter-level: I/II/III/IV)
+  const chapters = [
+    {label:'I · Intro', idx:0},
+    {label:'II · Work', idx:1},
+    {label:'III · Projects', idx:8},
+    {label:'IV · Contact', idx:14},
+  ];
+  chapters.forEach(c => {
+    const b = document.createElement('button');
+    b.textContent = c.label;
+    b.dataset.target = c.idx;
+    b.addEventListener('click', () => goTo(c.idx));
+    navMono.appendChild(b);
+  });
+
+  let current = 0;
+  function setCurrent(i){
+    current = Math.max(0, Math.min(total-1, i));
+    cur.textContent = String(current+1).padStart(2,'0');
+    [...marks.children].forEach((m,j)=>{
+      m.classList.toggle('passed', j<current);
+      m.classList.toggle('current', j===current);
+    });
+    // active chapter
+    const activeChapter = chapters.findLast(c => c.idx <= current) || chapters[0];
+    [...navMono.children].forEach(b => b.classList.toggle('active', +b.dataset.target===activeChapter.idx));
+    prev.disabled = current===0;
+    next.disabled = current===total-1;
+    // mobile title + overlay active state
+    if(slideTitle) slideTitle.textContent = slides[current].dataset.title || '';
+    [...navOverlayList.querySelectorAll('.nav-overlay-item')].forEach(btn => {
+      btn.classList.toggle('active', +btn.dataset.idx === current);
+    });
+  }
+  function goTo(i){
+    current = Math.max(0, Math.min(total-1, i));
+    rail.scrollTo({left: current * window.innerWidth, behavior:'smooth'});
+  }
+  prev.addEventListener('click', () => goTo(current-1));
+  next.addEventListener('click', () => goTo(current+1));
+
+  // sync on scroll
+  let raf=0;
+  rail.addEventListener('scroll', () => {
+    if(raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const i = Math.round(rail.scrollLeft / window.innerWidth);
+      if(i!==current) setCurrent(i);
+    });
+  });
+
+  // keyboard
+  window.addEventListener('keydown', e => {
+    if(e.key==='ArrowRight' || e.key==='PageDown' || e.key===' ') { e.preventDefault(); goTo(current+1); }
+    if(e.key==='ArrowLeft' || e.key==='PageUp') { e.preventDefault(); goTo(current-1); }
+    if(e.key==='Home') goTo(0);
+    if(e.key==='End') goTo(total-1);
+  });
+
+  // wheel: step one slide per gesture. Use a "last event timestamp" model with a
+  // single rAF poll — no chained timers that can race. After a step, require a
+  // genuine gap of inactivity (no wheel events for IDLE_MS) before allowing the next.
+  const STEP_THRESHOLD = 60;
+  const IDLE_MS = 220;
+  let wheelAccum = 0;
+  let wheelLocked = false;
+  let lastWheelAt = 0;
+  rail.addEventListener('wheel', e => {
+    const dy = e.deltaY, dx = e.deltaX;
+    const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+    if(delta === 0) return;
+    e.preventDefault();
+    lastWheelAt = performance.now();
+    if(wheelLocked) return;
+    // if it's been a while since the last event, treat this as a fresh gesture
+    wheelAccum += delta;
+    if(wheelAccum > STEP_THRESHOLD || wheelAccum < -STEP_THRESHOLD){
+      goTo(current + (wheelAccum > 0 ? 1 : -1));
+      wheelAccum = 0;
+      wheelLocked = true;
+    }
+  }, {passive:false});
+  // single rAF loop watches for idle and clears the lock + accumulator
+  (function watchIdle(){
+    const now = performance.now();
+    if(now - lastWheelAt > IDLE_MS){
+      wheelLocked = false;
+      wheelAccum = 0;
+    }
+    requestAnimationFrame(watchIdle);
+  })();
+
+  // scrubber click (fallback for gaps between marks)
+  scrubber.addEventListener('click', (e) => {
+    const r = scrubber.getBoundingClientRect();
+    const t = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    goTo(Math.round(t * (total-1)));
+  });
+
+  // scrubber label tooltip
+  const scrubberLabel = document.getElementById('scrubberLabel');
+  let previewIdx = -1;
+
+  function scrubberPreviewAt(clientX) {
+    const r = scrubber.getBoundingClientRect();
+    const t = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+    const idx = Math.round(t * (total-1));
+    const markEl = marks.children[idx];
+    if (!markEl) return;
+    scrubberLabel.textContent = markEl.dataset.label;
+    scrubberLabel.style.left = (idx / (total-1) * 100) + '%';
+    scrubberLabel.style.opacity = '1';
+    if (idx !== previewIdx) {
+      if (previewIdx >= 0) marks.children[previewIdx].classList.remove('scrubber-preview');
+      markEl.classList.add('scrubber-preview');
+      previewIdx = idx;
+    }
+  }
+
+  function scrubberPreviewHide() {
+    scrubberLabel.style.opacity = '0';
+    if (previewIdx >= 0) { marks.children[previewIdx].classList.remove('scrubber-preview'); previewIdx = -1; }
+  }
+
+  // desktop hover
+  scrubber.addEventListener('mousemove', (e) => scrubberPreviewAt(e.clientX));
+  scrubber.addEventListener('mouseleave', scrubberPreviewHide);
+
+  // mobile touch — show label while dragging, navigate on lift
+  scrubber.addEventListener('touchstart', (e) => scrubberPreviewAt(e.touches[0].clientX), {passive:true});
+  scrubber.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    scrubberPreviewAt(e.touches[0].clientX);
+  }, {passive:false});
+  scrubber.addEventListener('touchend', (e) => {
+    const r = scrubber.getBoundingClientRect();
+    const t = Math.max(0, Math.min(1, (e.changedTouches[0].clientX - r.left) / r.width));
+    goTo(Math.round(t * (total-1)));
+    setTimeout(scrubberPreviewHide, 350);
+  });
+
+  // resize: keep current
+  window.addEventListener('resize', () => {
+    rail.scrollTo({left: current * window.innerWidth, behavior:'auto'});
+  });
+
+  // build nav overlay slide list
+  (function(){
+    let chIdx = 0;
+    slides.forEach((slide, i) => {
+      const chapterHere = chapters.find(c => c.idx === i);
+      if(chapterHere){
+        const h = document.createElement('div');
+        h.className = 'nav-overlay-chapter';
+        h.textContent = chapterHere.label;
+        navOverlayList.appendChild(h);
+      }
+      const btn = document.createElement('button');
+      btn.className = 'nav-overlay-item';
+      btn.dataset.idx = i;
+      const num = document.createElement('span');
+      num.className = 'item-num';
+      num.textContent = String(i+1).padStart(2,'0');
+      const lbl = document.createElement('span');
+      lbl.className = 'item-title';
+      lbl.textContent = slide.dataset.title || slide.dataset.screenLabel || String(i+1);
+      btn.appendChild(num); btn.appendChild(lbl);
+      btn.addEventListener('click', () => { goTo(i); closeNavOverlay(); });
+      navOverlayList.appendChild(btn);
+    });
+  })();
+
+  // nav overlay open / close
+  function openNavOverlay(){
+    navOverlay.classList.add('open');
+    navOverlay.setAttribute('aria-hidden','false');
+    slideTitleBtn.setAttribute('aria-expanded','true');
+    const active = navOverlayList.querySelector('.nav-overlay-item.active');
+    if(active) active.scrollIntoView({block:'center'});
+  }
+  function closeNavOverlay(){
+    navOverlay.classList.remove('open');
+    navOverlay.setAttribute('aria-hidden','true');
+    slideTitleBtn.setAttribute('aria-expanded','false');
+  }
+  slideTitleBtn.addEventListener('click', () =>
+    navOverlay.classList.contains('open') ? closeNavOverlay() : openNavOverlay()
+  );
+  document.getElementById('navOverlayClose').addEventListener('click', closeNavOverlay);
+  document.getElementById('navOverlayHandle').addEventListener('click', closeNavOverlay);
+  navOverlay.addEventListener('click', (e) => { if(e.target === navOverlay) closeNavOverlay(); });
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && navOverlay.classList.contains('open')) closeNavOverlay();
+  });
+
+  setCurrent(0);
+
+  // hide loader
+  setTimeout(()=> document.getElementById('loader').classList.add('hide'), 300);
+  setTimeout(()=> document.getElementById('loader').remove(), 1200);
+})();
+</script>
+
+<script>
+// Dundra Map slide — pin tooltips
+(function(){
+  const container = document.getElementById('mapContainer');
+  if(!container) return;
+
+  const tooltip  = document.getElementById('mapTooltip');
+  const tipVideo = document.getElementById('tipVideo');
+  const tipImage = document.getElementById('tipImage');
+  const tipLabel = document.getElementById('tipLabel');
+  const tipClose = document.getElementById('tipClose');
+  const pins     = [...container.querySelectorAll('.map-pin')];
+  const RATIO    = 2; // map is 2400×1200
+  const FOOTER_H = 44;
+
+  let activePin = null;
+
+  // Size the container to preserve the 2:1 aspect ratio within the slide
+  function sizeContainer() {
+    const slide = container.parentElement;
+    const sw = slide.clientWidth;
+    const sh = slide.clientHeight - FOOTER_H;
+    let w, h;
+    if(sw / sh > RATIO) { h = sh; w = h * RATIO; }
+    else                 { w = sw; h = w / RATIO; }
+    container.style.width  = w + 'px';
+    container.style.height = h + 'px';
+  }
+
+  // Place each pin at its data-x / data-y percentage within the container
+  function positionPins() {
+    const cw = container.offsetWidth;
+    const ch = container.offsetHeight;
+    pins.forEach(pin => {
+      pin.style.left = (parseFloat(pin.dataset.x) / 100 * cw) + 'px';
+      pin.style.top  = (parseFloat(pin.dataset.y) / 100 * ch) + 'px';
+    });
+    const routeEl = document.getElementById('mapRoute');
+    const routeBloom = document.getElementById('mapRouteBloom');
+    if(routeEl) {
+      const sorted = [...pins].sort((a,b) => +a.dataset.num - +b.dataset.num);
+      const pts = sorted.map(p => `${parseFloat(p.style.left)},${parseFloat(p.style.top)}`).join(' ');
+      routeEl.setAttribute('points', pts);
+      if(routeBloom) routeBloom.setAttribute('points', pts);
+    }
+    if(!activePin) return;
+    if(isMobile()) {
+      // Clear desktop-set inline styles so CSS fixed layout takes over cleanly
+      tooltip.style.left = '';
+      tooltip.style.top  = '';
+      tooltip.style.transform = '';
+    } else {
+      anchorTooltip(activePin);
+    }
+  }
+
+  function isMobile() { return window.innerWidth <= 768; }
+
+  // Position the tooltip near pin (desktop only — mobile uses a CSS fixed bottom drawer)
+  function anchorTooltip(pin) {
+    if(isMobile()) return;
+    const slide = container.parentElement;
+    const cw    = container.offsetWidth;
+    const ch    = container.offsetHeight;
+    const px    = parseFloat(pin.style.left);
+    const py    = parseFloat(pin.style.top);
+    const TW    = tooltip.offsetWidth || 480;
+    const PAD   = 14;
+    const PIN_R = 19; // half of 34px pin
+    const VOFF  = PIN_R + 6; // gap between pin edge and tooltip edge
+
+    // Extra slide space above/below the map container (dark letterbox bands)
+    const contRect  = container.getBoundingClientRect();
+    const slideRect = slide.getBoundingClientRect();
+    const spaceAbove = Math.max(0, contRect.top    - slideRect.top);
+    const spaceBelow = Math.max(0, slideRect.bottom - contRect.bottom);
+
+    // Max usable height in each direction, anchored VOFF away from the pin
+    const maxHAbove = (py - VOFF) + spaceAbove - PAD;
+    const maxHBelow = (ch - py - VOFF) + spaceBelow - PAD;
+
+    // Pick the direction with more room so the tooltip never covers the pin
+    const useAbove = maxHAbove >= maxHBelow;
+
+    // Horizontal: center on pin, clamp to container edges
+    let tx = px - TW / 2;
+    if(tx + TW > cw - PAD) tx = cw - TW - PAD;
+    if(tx < PAD)            tx = PAD;
+
+    tooltip.style.left      = tx + 'px';
+    tooltip.style.transform = 'none';
+
+    if(useAbove) {
+      // Anchor bottom of tooltip VOFF above the pin center; it grows upward
+      tooltip.style.top       = '';
+      tooltip.style.maxHeight = Math.max(50, maxHAbove) + 'px';
+      tooltip.style.bottom    = (ch - (py - VOFF)) + 'px';
+    } else {
+      // Anchor top of tooltip VOFF below the pin center; it grows downward
+      tooltip.style.bottom    = '';
+      tooltip.style.maxHeight = Math.max(50, maxHBelow) + 'px';
+      tooltip.style.top       = (py + VOFF) + 'px';
+    }
+  }
+
+  let closeTimer = null;
+  function scheduleClose() { clearTimeout(closeTimer); closeTimer = setTimeout(closeTooltip, 180); }
+  function cancelClose()   { clearTimeout(closeTimer); }
+
+  function openTooltip(pin, toggle = false) {
+    if(toggle && activePin === pin) { closeTooltip(); return; }
+    if(activePin) activePin.classList.remove('active');
+    activePin = pin;
+    pin.classList.add('active');
+
+    tipLabel.textContent = 'Step ' + pin.dataset.num.padStart(2, '0') + ' · Dundra';
+    tooltip.classList.toggle('wide', +pin.dataset.num === 9 || +pin.dataset.num === 10);
+    const isImage = /\.(png|jpe?g|gif|webp)$/i.test(pin.dataset.video);
+    if(isImage) {
+      tipVideo.style.display = 'none';
+      tipVideo.src = '';
+      tipImage.style.display = 'block';
+      tipImage.src = pin.dataset.video;
+    } else {
+      tipImage.style.display = 'none';
+      tipImage.src = '';
+      tipVideo.style.display = 'block';
+      tipVideo.src = pin.dataset.video;
+      tipVideo.load();
+      tipVideo.play().catch(() => {});
+      tipVideo.addEventListener('loadedmetadata', () => { if(activePin) anchorTooltip(activePin); }, { once: true });
+    }
+
+    // On mobile clear any leftover inline position so CSS fixed layout takes over
+    if(isMobile()) {
+      tooltip.style.left      = '';
+      tooltip.style.top       = '';
+      tooltip.style.bottom    = '';
+      tooltip.style.maxHeight = '';
+      tooltip.style.transform = '';
+    }
+
+    tooltip.classList.add('visible');
+    requestAnimationFrame(() => anchorTooltip(pin));
+  }
+
+  function closeTooltip() {
+    tooltip.classList.remove('visible');
+    tipVideo.pause();
+    tipVideo.src = '';
+    tipImage.src = '';
+    if(activePin) { activePin.classList.remove('active'); activePin = null; }
+  }
+
+  pins.forEach(pin => {
+    // Mobile: tap to toggle open/close
+    pin.addEventListener('click', e => {
+      e.stopPropagation();
+      if(isMobile()) openTooltip(pin, true);
+    });
+    // Desktop: hover to open; short grace period so mouse can reach tooltip
+    pin.addEventListener('mouseenter', () => { if(!isMobile()) { cancelClose(); openTooltip(pin); } });
+    pin.addEventListener('mouseleave', () => { if(!isMobile()) scheduleClose(); });
+  });
+
+  // Keep tooltip open while cursor is over it (desktop)
+  tooltip.addEventListener('mouseenter', () => { if(!isMobile()) cancelClose(); });
+  tooltip.addEventListener('mouseleave', () => { if(!isMobile()) scheduleClose(); });
+
+  tipClose.addEventListener('click', e => { e.stopPropagation(); closeTooltip(); });
+
+  // Tapping outside closes the tooltip (mobile)
+  document.addEventListener('click', e => {
+    if(!tooltip.classList.contains('visible')) return;
+    if(!tooltip.contains(e.target) && !e.target.classList.contains('map-pin')) closeTooltip();
+  });
+
+  // Prevent slide wheel-navigation while hovering the tooltip
+  tooltip.addEventListener('wheel', e => e.stopPropagation(), {passive:true});
+
+  // Init and keep updated on resize
+  sizeContainer();
+  positionPins();
+  window.addEventListener('resize', () => { sizeContainer(); positionPins(); });
+})();
+</script>
+
+<!-- ============ TWEAKS PANEL ============ -->
+<style>
+  .twk-panel{
+    position:fixed; right:24px; bottom:80px; z-index:200;
+    width:300px; max-height:calc(100vh - 120px);
+    display:none; flex-direction:column;
+    background:rgba(20,18,16,.92);
+    color:var(--paper);
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border:1px solid rgba(232,184,107,.35);
+    border-radius:6px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(232,184,107,.05);
+    font-family:'JetBrains Mono', ui-monospace, monospace;
+    font-size:11px;
+    overflow:hidden;
+    animation: twkIn .25s ease;
+  }
+  .twk-panel.open{display:flex}
+  @keyframes twkIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .twk-hd{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px; border-bottom:1px solid rgba(232,184,107,.2);
+    cursor:move; user-select:none;
+    background:linear-gradient(180deg, rgba(232,184,107,.08), transparent);
+  }
+  .twk-hd b{font-family:'Cormorant Garamond', serif; font-weight:500; font-size:18px; letter-spacing:.02em; color:var(--gold)}
+  .twk-hd .sub{font-size:9px; letter-spacing:.22em; text-transform:uppercase; color:var(--paper-dim); display:block; margin-top:2px}
+  .twk-x{
+    appearance:none; border:1px solid rgba(232,184,107,.3);
+    background:transparent; color:var(--gold);
+    width:24px; height:24px; border-radius:4px; cursor:pointer;
+    font-size:14px; line-height:1; padding:0;
+    font-family:inherit;
+  }
+  .twk-x:hover{background:rgba(232,184,107,.15)}
+  .twk-body{
+    padding:14px 16px 16px; display:flex; flex-direction:column; gap:14px;
+    overflow-y:auto; min-height:0;
+  }
+  .twk-sect{
+    font-size:9px; font-weight:600; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold); padding-top:6px;
+    border-top:1px dashed rgba(232,184,107,.2);
+  }
+  .twk-sect:first-child{border-top:0; padding-top:0}
+  .twk-row{display:flex; flex-direction:column; gap:6px}
+  .twk-lbl{
+    display:flex; justify-content:space-between; align-items:baseline;
+    color:var(--paper-dim); font-size:10px; letter-spacing:.06em;
+  }
+  .twk-lbl span:first-child{color:var(--paper); font-weight:500; text-transform:uppercase; letter-spacing:.14em; font-size:9px}
+  .twk-lbl .v{font-variant-numeric:tabular-nums; color:var(--gold)}
+  .twk-help{font-size:10px; color:var(--paper-dim); line-height:1.5; margin-top:2px}
+  .twk-segs{
+    display:flex; gap:0;
+    border:1px solid rgba(232,184,107,.25); border-radius:4px; overflow:hidden;
+  }
+  .twk-segs button{
+    flex:1; appearance:none; background:transparent; color:var(--paper-dim);
+    border:0; border-left:1px solid rgba(232,184,107,.18);
+    padding:8px 6px; font-family:inherit; font-size:10px; letter-spacing:.14em;
+    text-transform:uppercase; cursor:pointer; transition:.18s;
+  }
+  .twk-segs button:first-child{border-left:0}
+  .twk-segs button:hover{background:rgba(232,184,107,.08); color:var(--paper)}
+  .twk-segs button.on{background:var(--gold); color:#1a1814; font-weight:600}
+  .twk-slider{
+    appearance:none; -webkit-appearance:none; width:100%; height:2px;
+    background:rgba(232,184,107,.25); border-radius:2px; outline:none; padding:0;
+  }
+  .twk-slider::-webkit-slider-thumb{
+    appearance:none; -webkit-appearance:none; width:14px; height:14px;
+    border-radius:50%; background:var(--gold); cursor:pointer;
+    box-shadow:0 0 0 3px rgba(232,184,107,.2);
+  }
+  .twk-slider::-moz-range-thumb{
+    width:14px; height:14px; border-radius:50%; background:var(--gold);
+    cursor:pointer; border:0; box-shadow:0 0 0 3px rgba(232,184,107,.2);
+  }
+  .twk-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:6px 0;
+  }
+  .twk-toggle .sw{
+    width:32px; height:18px; border-radius:9px;
+    background:rgba(232,184,107,.2); border:1px solid rgba(232,184,107,.3);
+    position:relative; cursor:pointer; transition:.2s;
+  }
+  .twk-toggle .sw::after{
+    content:""; position:absolute; left:2px; top:1px;
+    width:12px; height:12px; border-radius:50%;
+    background:var(--paper); transition:.2s;
+  }
+  .twk-toggle.on .sw{background:var(--gold)}
+  .twk-toggle.on .sw::after{left:17px; background:#1a1814}
+  .twk-btn{
+    appearance:none; background:transparent; color:var(--gold);
+    border:1px solid rgba(232,184,107,.4); border-radius:4px;
+    padding:8px 10px; font:inherit; font-size:10px; letter-spacing:.18em;
+    text-transform:uppercase; cursor:pointer;
+  }
+  .twk-btn:hover{background:rgba(232,184,107,.12)}
+  .twk-grid-mini{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:4px;
+    padding:8px; background:rgba(0,0,0,.3); border:1px solid rgba(232,184,107,.18);
+    border-radius:4px;
+  }
+  .twk-grid-mini .m{
+    aspect-ratio:1; background:#fbf6ec; border:1px solid #1a1814;
+    display:flex; align-items:center; justify-content:center; padding:6px;
+    cursor:grab; user-select:none; transition:.2s;
+  }
+  .twk-grid-mini .m.dark{background:#1a1814}
+  .twk-grid-mini .m img{max-width:100%; max-height:100%; object-fit:contain; pointer-events:none}
+  .twk-grid-mini .m.sel{outline:2px solid var(--gold); outline-offset:2px}
+</style>
+
+<div class="twk-panel" id="tweaks">
+  <div class="twk-hd" id="tweaksHead">
+    <div>
+      <b>Tweaks</b>
+      <span class="sub">Bestiary · Slide 10</span>
+    </div>
+    <button class="twk-x" id="tweaksClose" title="Close">×</button>
+  </div>
+  <div class="twk-body">
+
+    <div class="twk-sect">Image Order</div>
+    <div class="twk-row">
+      <div class="twk-help">Tap two cells to swap them. The grid below mirrors slide 10's bestiary.</div>
+      <div class="twk-grid-mini" id="twkGrid"></div>
+      <div style="display:flex; gap:6px; margin-top:4px">
+        <button class="twk-btn" id="twkSwap34" style="flex:1">Swap 3 ↔ 4</button>
+        <button class="twk-btn" id="twkReset">Reset</button>
+      </div>
+    </div>
+
+    <div class="twk-sect">Grid Style</div>
+    <div class="twk-row">
+      <div class="twk-lbl"><span>Background</span></div>
+      <div class="twk-segs" id="twkBg">
+        <button data-v="paper">Paper</button>
+        <button data-v="ink">Ink</button>
+        <button data-v="alt">Alt</button>
+      </div>
+    </div>
+    <div class="twk-row">
+      <div class="twk-lbl"><span>Padding</span><span class="v" id="twkPadV">78%</span></div>
+      <input class="twk-slider" id="twkPad" type="range" min="50" max="95" step="1"/>
+    </div>
+    <div class="twk-row">
+      <div class="twk-toggle" id="twkLabels">
+        <span style="font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--paper)">Show Labels</span>
+        <div class="sw"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(() => {
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "order": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "bg": "paper",
+    "pad": 78,
+    "labels": true
+  }/*EDITMODE-END*/;
+
+  let t = JSON.parse(JSON.stringify(TWEAK_DEFAULTS));
+
+  const panel = document.getElementById('tweaks');
+  const head = document.getElementById('tweaksHead');
+  const closeBtn = document.getElementById('tweaksClose');
+  const grid = document.querySelector('.s-bestiary .grid');
+  const cells = grid ? Array.from(grid.querySelectorAll('.cel')) : [];
+
+  // mini grid in panel
+  const mini = document.getElementById('twkGrid');
+  function renderMini(){
+    mini.innerHTML = '';
+    t.order.forEach((slot, idx) => {
+      const src = cells.find(c => +c.dataset.slot === slot);
+      if(!src) return;
+      const m = document.createElement('div');
+      m.className = 'm' + (src.classList.contains('dark') ? ' dark' : '');
+      m.dataset.idx = idx;
+      m.dataset.slot = slot;
+      const img = src.querySelector('img').cloneNode();
+      m.appendChild(img);
+      mini.appendChild(m);
+    });
+  }
+
+  let selIdx = null;
+  mini.addEventListener('click', (e) => {
+    const m = e.target.closest('.m');
+    if(!m) return;
+    const idx = +m.dataset.idx;
+    if(selIdx === null){
+      selIdx = idx;
+      m.classList.add('sel');
+    } else if(selIdx === idx){
+      selIdx = null;
+      m.classList.remove('sel');
+    } else {
+      // swap
+      [t.order[selIdx], t.order[idx]] = [t.order[idx], t.order[selIdx]];
+      selIdx = null;
+      apply(); persist();
+    }
+  });
+
+  // apply state to live grid
+  function apply(){
+    if(!grid) return;
+    // reorder via flex order on grid items
+    t.order.forEach((slot, idx) => {
+      const cel = cells.find(c => +c.dataset.slot === slot);
+      if(cel) cel.style.order = idx;
+    });
+    // bg
+    const bestiary = document.querySelector('.s-bestiary');
+    if(bestiary){
+      if(t.bg === 'paper'){ bestiary.style.background = '#f4ece0'; bestiary.style.color = '#1a1814' }
+      else if(t.bg === 'ink'){ bestiary.style.background = '#1a1814'; bestiary.style.color = '#f4ece0' }
+      else { bestiary.style.background = '#e8d9bf'; bestiary.style.color = '#1a1814' }
+    }
+    // pad (image scale inside cell)
+    cells.forEach(c => {
+      const img = c.querySelector('img');
+      if(img){ img.style.maxWidth = t.pad + '%'; img.style.maxHeight = t.pad + '%' }
+    });
+    // labels
+    cells.forEach(c => {
+      const lbl = c.querySelector('.lbl');
+      const num = c.querySelector('.num');
+      if(lbl) lbl.style.display = t.labels ? '' : 'none';
+      if(num) num.style.display = t.labels ? '' : 'none';
+    });
+    // re-render mini
+    renderMini();
+    // sync controls
+    document.getElementById('twkPadV').textContent = t.pad + '%';
+    document.getElementById('twkPad').value = t.pad;
+    document.querySelectorAll('#twkBg button').forEach(b => b.classList.toggle('on', b.dataset.v === t.bg));
+    document.getElementById('twkLabels').classList.toggle('on', !!t.labels);
+  }
+
+  function persist(){
+    try {
+      window.parent.postMessage({type:'__edit_mode_set_keys', edits: t}, '*');
+    } catch(e){}
+  }
+
+  // wire up controls
+  document.getElementById('twkSwap34').addEventListener('click', () => {
+    [t.order[2], t.order[3]] = [t.order[3], t.order[2]];
+    apply(); persist();
+  });
+  document.getElementById('twkReset').addEventListener('click', () => {
+    t = JSON.parse(JSON.stringify(TWEAK_DEFAULTS));
+    selIdx = null;
+    apply(); persist();
+  });
+  document.getElementById('twkPad').addEventListener('input', (e) => {
+    t.pad = +e.target.value;
+    apply(); persist();
+  });
+  document.querySelectorAll('#twkBg button').forEach(b => {
+    b.addEventListener('click', () => {
+      t.bg = b.dataset.v;
+      apply(); persist();
+    });
+  });
+  document.getElementById('twkLabels').addEventListener('click', () => {
+    t.labels = !t.labels;
+    apply(); persist();
+  });
+
+  // drag to move
+  let drag = null;
+  head.addEventListener('mousedown', (e) => {
+    if(e.target.closest('.twk-x')) return;
+    const r = panel.getBoundingClientRect();
+    drag = {dx: e.clientX - r.left, dy: e.clientY - r.top};
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', (e) => {
+    if(!drag) return;
+    panel.style.left = (e.clientX - drag.dx) + 'px';
+    panel.style.top  = (e.clientY - drag.dy) + 'px';
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+  });
+  window.addEventListener('mouseup', () => { drag = null });
+
+  // host protocol — listener FIRST
+  window.addEventListener('message', (e) => {
+    const d = e && e.data;
+    if(!d || !d.type) return;
+    if(d.type === '__activate_edit_mode'){
+      panel.classList.add('open');
+      // jump to slide 10 (index 9) so user sees the grid
+      const rail = document.getElementById('rail');
+      if(rail){ rail.scrollTo({left: 9 * window.innerWidth, behavior:'smooth'}) }
+      apply();
+    } else if(d.type === '__deactivate_edit_mode'){
+      panel.classList.remove('open');
+    }
+  });
+  closeBtn.addEventListener('click', () => {
+    panel.classList.remove('open');
+    try { window.parent.postMessage({type:'__edit_mode_dismissed'}, '*') } catch(e){}
+  });
+
+  // announce availability
+  try { window.parent.postMessage({type:'__edit_mode_available'}, '*') } catch(e){}
+
+  // initial render
+  apply();
+})();
+</script>
+</body>
+</html>
