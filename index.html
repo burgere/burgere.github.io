@@ -870,6 +870,21 @@
     display:block; flex:1; min-height:0;
     border:1px solid rgba(232,184,107,.15);
   }
+  .game-embed-lazy{
+    display:flex; flex:1; min-height:0; align-items:center; justify-content:center;
+    border:1px solid rgba(232,184,107,.15);
+    background:rgba(0,0,0,.4);
+  }
+  .game-embed-lazy .play-btn{
+    cursor:pointer; background:none;
+    border:1px solid rgba(232,184,107,.6); color:var(--gold);
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.18em;
+    text-transform:uppercase; padding:12px 28px;
+    transition:background .2s, border-color .2s;
+  }
+  .game-embed-lazy .play-btn:hover,.game-embed-lazy .play-btn:focus{
+    background:rgba(232,184,107,.12); border-color:var(--gold);
+  }
 
   /* ---------- slide 12: 12 Hours of Monsters ---------- */
   .s-monsters{
@@ -1517,7 +1532,7 @@
         <p class="body">When I'm not shipping iOS, I'm probably drawing or spinning up other projects. I keep a small bestiary of hand-drawn monsters, icons, and totems — drawn for a series of personal game prototypes.</p>
       </div>
       <div class="anubis-stage">
-        <img class="anubis" src="assets/Untitled_Artwork 5.gif" alt="Animated chest illustration" style="height:80%; filter:drop-shadow(0 30px 40px rgba(0,0,0,.5)) drop-shadow(0 0 60px rgba(232,184,107,.15))"/>
+        <img class="anubis" src="assets/Untitled_Artwork 5.gif" alt="Animated chest illustration" loading="lazy" style="height:80%; filter:drop-shadow(0 30px 40px rgba(0,0,0,.5)) drop-shadow(0 0 60px rgba(232,184,107,.15))"/>
         <div class="glyph-marks"></div>
       </div>
       <div class="side-idx" style="color:var(--gold); opacity:.7">PERSONAL · ERIC BURGER</div>
@@ -1575,7 +1590,9 @@
       <div class="scene-tag">After Hours · 12 Hours of Monsters</div>
       <div class="scene-game">
         <span class="game-label">Interactive Demo · HTML5</span>
-        <iframe src="https://itch.io/embed-upload/17509584" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share" allowtransparency="true"></iframe>
+        <div class="game-embed-lazy" data-src="https://itch.io/embed-upload/17509584" data-allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share">
+          <button class="play-btn" onclick="loadGame(this)">▶ Load Game</button>
+        </div>
       </div>
       <div class="scale-rule"><span class="bar"></span><span>12 Hours of Monsters</span></div>
     </section>
@@ -1594,7 +1611,7 @@
         </div>
       </div>
       <div class="anubis-stage">
-        <img class="anubis" src="assets/anubis.gif" alt="Anubis character — animated, by collaborator"/>
+        <img class="anubis" src="assets/anubis.gif" alt="Anubis character — animated, by collaborator" loading="lazy"/>
       </div>
     </section>
 
@@ -1605,7 +1622,9 @@
       <div class="scene-tag">Dundra · Environment 02</div>
       <div class="scene-game">
         <span class="game-label">Interactive Demo · Unity WebGL</span>
-        <iframe src="https://itch.io/embed-upload/17493814" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share" allowtransparency="true"></iframe>
+        <div class="game-embed-lazy" data-src="https://itch.io/embed-upload/17493814" data-allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share">
+          <button class="play-btn" onclick="loadGame(this)">▶ Load Game</button>
+        </div>
       </div>
       <div class="scale-rule"><span class="bar"></span><span>Dundra</span></div>
     </section>
@@ -1974,6 +1993,18 @@
   setTimeout(()=> document.getElementById('loader').classList.add('hide'), 300);
   setTimeout(()=> document.getElementById('loader').remove(), 1200);
 })();
+
+function loadGame(btn) {
+  const wrapper = btn.closest('.game-embed-lazy');
+  const iframe = document.createElement('iframe');
+  iframe.src = wrapper.dataset.src;
+  iframe.frameBorder = '0';
+  iframe.scrolling = 'no';
+  iframe.allowFullscreen = true;
+  iframe.setAttribute('allow', wrapper.dataset.allow);
+  iframe.allowTransparency = true;
+  wrapper.replaceWith(iframe);
+}
 </script>
 
 <script>
