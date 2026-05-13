@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Eric Burger — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -989,6 +989,17 @@
     padding:0; line-height:1; transition:border-color .15s, color .15s;
   }
   .tip-close:hover{border-color:var(--gold); color:var(--gold)}
+  .tip-meta{display:flex; flex-direction:column; gap:4px; flex-shrink:0}
+  .tip-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px; font-weight:500; line-height:1.2;
+    color:var(--paper); letter-spacing:-.01em;
+  }
+  .tip-caption{
+    margin:0;
+    font-size:12px; line-height:1.55;
+    color:var(--paper-dim);
+  }
   .tip-video,.tip-image{
     display:block; width:100%;
     flex:1 1 auto; min-height:0;
@@ -1114,6 +1125,28 @@
   .loader .lg::after{content:" ▍"; animation:blink 1s steps(2) infinite}
   @keyframes blink{50%{opacity:0}}
 
+  /* ---------- itch.io mobile callout (hidden on desktop) ---------- */
+  .game-mobile-callout{display:none}
+  .game-mobile-callout .gmc-label{
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--gold);display:block;margin-bottom:10px;
+  }
+  .game-mobile-callout .gmc-title{
+    font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;
+    color:var(--paper);margin-bottom:16px;line-height:1.1;
+  }
+  .game-mobile-callout .gmc-link{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;text-decoration:none;color:var(--gold);
+    border:1px solid rgba(232,184,107,.6);padding:11px 20px;margin-bottom:14px;
+    transition:background .2s,border-color .2s;
+  }
+  .game-mobile-callout .gmc-note{
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--paper-dim);margin:0;opacity:.65;
+  }
+
   /* ============================================================
      MOBILE  (≤ 768 px)
      ============================================================ */
@@ -1124,7 +1157,7 @@
     .brand .glyph{width:22px;height:22px;font-size:12px}
     .brand .who{font-size:14px}
     .nav-mono{display:none}
-    .bottom-bar{padding:10px 14px 16px;gap:8px}
+    .bottom-bar{padding:10px 14px calc(16px + env(safe-area-inset-bottom,0px));gap:8px}
     .counter{font-size:18px;min-width:48px;gap:3px}
     .counter .total,.counter .sep{font-size:13px}
     .scrubber{display:none}
@@ -1152,14 +1185,17 @@
     .side-idx{display:none}
 
     /* -- slide base: allow vertical scroll inside each slide -- */
-    .slide{overflow-y:auto}
+    .slide{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
 
     /* -- 01 intro -- */
-    .s-intro{grid-template-columns:1fr}
-    .s-intro .right{display:none}
+    .s-intro{grid-template-columns:1fr; grid-template-rows:40vh 1fr}
+    .s-intro .right{display:block; order:-1}
+    .portrait-frame{inset:12px}
+    .s-intro .right .corner-marks{inset:14px}
     .s-intro .left{
-      padding:80px 24px 90px;
+      padding:24px 24px 90px;
       justify-content:flex-start;
+      overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain;
     }
     .s-intro .left::before{display:none}
     .s-intro .left .pad{padding-left:0}
@@ -1184,9 +1220,11 @@
     .award-row{flex-direction:column;gap:12px;margin-top:24px}
 
     /* -- 03/05/07 case studies -- */
-    .s-case{grid-template-columns:1fr}
-    .s-case .visual{display:none}
-    .s-case .info{padding:80px 24px 80px;justify-content:flex-start}
+    .s-case{grid-template-columns:1fr; grid-template-rows:1fr 40vh}
+    .s-case .visual{display:block}
+    .s-case .visual .img-frame{inset:16px}
+    .s-case .visual .phone-real{transform:translate(-50%,-50%) scale(0.42)}
+    .s-case .info{padding:80px 24px 80px;justify-content:flex-start;overflow-y:auto}
     .s-case h2{font-size:clamp(40px,12vw,68px);margin-bottom:14px}
     .s-case .lede{font-size:15px}
     .s-case ul{margin-top:18px;gap:10px}
@@ -1301,6 +1339,32 @@
 
     /* tweaks panel: full-width on phones */
     .twk-panel{right:8px;left:8px;width:auto;bottom:74px}
+
+    /* -- safe-area bottom clearance so scrollable content clears fixed chrome -- */
+    .s-intro .left{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+    .s-role{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+    .s-case .info{
+      padding-bottom:calc(80px + env(safe-area-inset-bottom,0px));
+      -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;
+    }
+    .s-quote{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+    .s-pivot{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+    .s-bestiary{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+    .s-treasure{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+    .s-dundra-intro{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+    .s-end{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+
+    /* -- itch.io callouts: show on mobile -- */
+    .game-mobile-callout{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);
+      background:rgba(14,16,20,.88);
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border:1px solid rgba(232,184,107,.35);
+      padding:28px 24px;
+      text-align:center;
+      z-index:10;
+    }
   }
 
 </style>
@@ -1594,6 +1658,12 @@
           <button class="play-btn" onclick="loadGame(this)">▶ Load Game</button>
         </div>
       </div>
+      <div class="game-mobile-callout">
+        <span class="gmc-label">Interactive Demo · HTML5</span>
+        <div class="gmc-title">12 Hours of Monsters</div>
+        <a class="gmc-link" href="https://porchhouse.itch.io/12-hours-of-monsters" target="_blank" rel="noopener">Play on itch.io ↗</a>
+        <p class="gmc-note">Best experienced on a larger screen</p>
+      </div>
       <div class="scale-rule"><span class="bar"></span><span>12 Hours of Monsters</span></div>
     </section>
 
@@ -1625,6 +1695,12 @@
         <div class="game-embed-lazy" data-src="https://itch.io/embed-upload/17493814" data-allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share">
           <button class="play-btn" onclick="loadGame(this)">▶ Load Game</button>
         </div>
+      </div>
+      <div class="game-mobile-callout">
+        <span class="gmc-label">Interactive Demo · Unity WebGL</span>
+        <div class="gmc-title">Dundra</div>
+        <a class="gmc-link" href="https://porchhouse.itch.io/dundra" target="_blank" rel="noopener">Play on itch.io ↗</a>
+        <p class="gmc-note">Best experienced on a larger screen</p>
       </div>
       <div class="scale-rule"><span class="bar"></span><span>Dundra</span></div>
     </section>
@@ -1663,22 +1739,26 @@
 
         <!-- Pins 1–11, left→right = chronological player progression.
              data-x / data-y are % of map image dimensions, positioned by JS. -->
-        <button class="map-pin" data-num="1"  data-x="7"  data-y="12" data-video="assets/map/1.mp4">1</button>
-        <button class="map-pin" data-num="2"  data-x="17" data-y="63" data-video="assets/map/2.mov">2</button>
-        <button class="map-pin" data-num="3"  data-x="32" data-y="55" data-video="assets/map/3.png">3</button>
-        <button class="map-pin" data-num="4"  data-x="38" data-y="70" data-video="assets/map/4.mov">4</button>
-        <button class="map-pin" data-num="5"  data-x="42" data-y="33" data-video="assets/map/5.mov">5</button>
-        <button class="map-pin" data-num="6"  data-x="53" data-y="23" data-video="assets/map/6.mov">6</button>
-        <button class="map-pin" data-num="7"  data-x="53" data-y="69" data-video="assets/map/7.mov">7</button>
-        <button class="map-pin" data-num="8"  data-x="68" data-y="42" data-video="assets/map/8.mov">8</button>
-        <button class="map-pin" data-num="9"  data-x="83" data-y="16" data-video="assets/map/9.mov">9</button>
-        <button class="map-pin" data-num="10" data-x="86" data-y="65" data-video="assets/map/10.mov">10</button>
+        <button class="map-pin" data-num="1"  data-x="7"  data-y="12" data-video="assets/map/1.mp4"  data-title="iOS POC"          data-caption="Dundra began as a mobile proof-of-concept for an RPG character creator, before evolving into an auto-battler.">1</button>
+        <button class="map-pin" data-num="2"  data-x="17" data-y="63" data-video="assets/map/2.mov"  data-title="iOS POC"          data-caption="As the app evolved, Dundra&#8217;s early DNA started to take shape as a strategic dungeon crawler/RPG hybrid.">2</button>
+        <button class="map-pin" data-num="3"  data-x="32" data-y="55" data-video="assets/map/3.png"  data-title="The Map"          data-caption="With the native iOS prototype done in Swift, ideation began on a hub world design.">3</button>
+        <button class="map-pin" data-num="4"  data-x="38" data-y="70" data-video="assets/map/4.mov"  data-title="A New Prototype"  data-caption="Taken around the time my artist colleague joined: A more sophisticated menu.">4</button>
+        <button class="map-pin" data-num="5"  data-x="42" data-y="33" data-video="assets/map/5.mov"  data-title="A New Prototype"  data-caption="A first pass for the hub world map, including an early concept for a first-time user guide.">5</button>
+        <button class="map-pin" data-num="6"  data-x="53" data-y="23" data-video="assets/map/6.mov"  data-title="A New Prototype"  data-caption="Boss fight prototype, testing drag targets, interactions and new animations.">6</button>
+        <button class="map-pin" data-num="7"  data-x="53" data-y="69" data-video="assets/map/7.mov"  data-title="A New Prototype"  data-caption="Additions to the map and progression concepts, more developed in-game UI, and dialogue fragments.">7</button>
+        <button class="map-pin" data-num="8"  data-x="68" data-y="42" data-video="assets/map/8.mov"  data-title="A New Prototype"  data-caption="Higher fidelity, and experimentation with parallax scrolling. Different UI patterns and state representations.">8</button>
+        <button class="map-pin" data-num="9"  data-x="83" data-y="16" data-video="assets/map/9.mov"  data-title="Full Unity Demo"  data-caption="As the idea of growing beyond mobile became more apparent, we started to work away at a Unity transition. This was an early pass at a first iteration — quicker now with the plumbing hashed out and assets to bash with.">9</button>
+        <button class="map-pin" data-num="10" data-x="86" data-y="65" data-video="assets/map/10.mov" data-title="Full Unity Demo"  data-caption="With the added support for particle effects, more sophisticated animations and the underpinnings of a game engine, Dundra takes its final form.">10</button>
 
         <!-- Shared tooltip, repositioned by JS on each pin click -->
         <div class="map-tooltip" id="mapTooltip">
           <div class="tip-hd">
             <span class="tip-label" id="tipLabel">Step 01 · Dundra</span>
             <button class="tip-close" id="tipClose" aria-label="Close">✕</button>
+          </div>
+          <div class="tip-meta">
+            <span class="tip-title" id="tipTitle"></span>
+            <p class="tip-caption" id="tipCaption"></p>
           </div>
           <video class="tip-video" id="tipVideo" controls playsinline muted></video>
           <img class="tip-image" id="tipImage" alt="" style="display:none" />
@@ -2013,11 +2093,13 @@ function loadGame(btn) {
   const container = document.getElementById('mapContainer');
   if(!container) return;
 
-  const tooltip  = document.getElementById('mapTooltip');
-  const tipVideo = document.getElementById('tipVideo');
-  const tipImage = document.getElementById('tipImage');
-  const tipLabel = document.getElementById('tipLabel');
-  const tipClose = document.getElementById('tipClose');
+  const tooltip    = document.getElementById('mapTooltip');
+  const tipVideo   = document.getElementById('tipVideo');
+  const tipImage   = document.getElementById('tipImage');
+  const tipLabel   = document.getElementById('tipLabel');
+  const tipTitle   = document.getElementById('tipTitle');
+  const tipCaption = document.getElementById('tipCaption');
+  const tipClose   = document.getElementById('tipClose');
   const pins     = [...container.querySelectorAll('.map-pin')];
   const RATIO    = 2; // map is 2400×1200
   const FOOTER_H = 44;
@@ -2122,7 +2204,9 @@ function loadGame(btn) {
     activePin = pin;
     pin.classList.add('active');
 
-    tipLabel.textContent = 'Step ' + pin.dataset.num.padStart(2, '0') + ' · Dundra';
+    tipLabel.textContent   = 'Step ' + pin.dataset.num.padStart(2, '0') + ' · Dundra';
+    tipTitle.textContent   = pin.dataset.title   || '';
+    tipCaption.textContent = pin.dataset.caption || '';
     tooltip.classList.toggle('wide', +pin.dataset.num === 9 || +pin.dataset.num === 10);
     const isImage = /\.(png|jpe?g|gif|webp)$/i.test(pin.dataset.video);
     if(isImage) {
