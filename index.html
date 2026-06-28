@@ -1285,7 +1285,7 @@
     .s-intro .meta .v{font-size:18px}
 
     /* -- 02 role overview -- */
-    .s-role{grid-template-columns:1fr;padding:80px 24px 80px;align-content:start;gap:0}
+    .s-role{grid-template-columns:1fr;padding:24px 24px 80px;align-content:start;gap:0;margin-top:56px;height:calc(100vh - 56px)}
     .s-role .col-l{
       padding-right:0;border-right:none;
       border-bottom:1px solid var(--rule);
@@ -1304,7 +1304,11 @@
     .s-case .visual{display:block}
     .s-case .visual .img-frame{inset:16px}
     .s-case .visual .phone-real{transform:translate(-50%,-50%) scale(0.42)}
-    .s-case .info{padding:80px 24px 80px;justify-content:flex-start;overflow-y:auto}
+    .s-case .info{
+      margin-top:64px;padding:8px 24px 24px;justify-content:flex-start;overflow-y:auto;
+      -webkit-mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent 100%);
+      mask-image:linear-gradient(to bottom, #000 calc(100% - 28px), transparent 100%);
+    }
     .s-case h2{font-size:clamp(40px,12vw,68px);margin-bottom:14px}
     .s-case .lede{font-size:15px}
     .s-case ul{margin-top:18px;gap:10px}
@@ -1312,14 +1316,14 @@
     .case-meta .v{font-size:17px}
 
     /* -- 04/06/08 testimonials -- */
-    .s-quote{padding:80px 24px}
+    .s-quote{padding:24px 24px 80px;margin-top:56px;height:calc(100vh - 56px)}
     .s-quote .quote-mark{font-size:150px;left:8px;top:28px}
     .s-quote .body{grid-template-columns:1fr;gap:22px;max-width:100%;width:100%}
     .s-quote blockquote{font-size:clamp(19px,5.5vw,28px)}
 
     /* -- 09 side projects pivot -- */
-    .s-pivot{grid-template-columns:1fr;padding:0 24px;align-items:start;align-content:start}
-    .s-pivot .text{padding-right:0;padding-top:80px}
+    .s-pivot{grid-template-columns:1fr;padding:0 24px;align-items:start;align-content:start;margin-top:56px;height:calc(100vh - 56px)}
+    .s-pivot .text{padding-right:0;padding-top:24px}
     .s-pivot h2{font-size:clamp(52px,15vw,90px)}
     .s-pivot .anubis-stage{height:42vh}
     .s-pivot .glyph-marks{display:none}
@@ -1351,15 +1355,17 @@
     /* -- 13 dundra intro -- */
     .s-dundra-intro{
       grid-template-columns:1fr;
-      padding:60px 24px 40px;
+      padding:16px 24px 40px;
       gap:12px;
+      margin-top:56px;
+      height:calc(100vh - 56px);
     }
     .s-dundra-intro .dundra-logo{width:min(280px,80%);margin-bottom:10px}
     .s-dundra-intro p{font-size:15px;margin-bottom:10px}
     .s-dundra-intro .credit-card{margin-top:14px}
     .s-dundra-intro .anubis-stage{height:36vh}
     .s-dundra-intro .anubis-stage::before{width:220px;height:220px}
-    .s-dundra-intro .corner-mark{top:56px;right:16px;font-size:9px;padding:7px 12px}
+    .s-dundra-intro .corner-mark{top:8px;right:16px;font-size:9px;padding:7px 12px}
 
     /* -- 12/14/15 full-bleed scenes -- */
     .s-scene .scene-info{
@@ -1376,11 +1382,13 @@
     .s-scene .scene-game{display:none}
 
     /* -- 14 Dundra map -- */
+    .s-map{padding-bottom:16px}
     .s-map .map-info{left:16px;bottom:72px;padding:16px 20px;max-width:calc(100% - 32px)}
     .s-map .map-info h2{font-size:28px;gap:8px}
     .map-tag{top:56px;right:16px;font-size:9px;padding:7px 12px}
-    .map-footer{padding:0 16px;font-size:8px}
-    .map-footer-arrow .arr-track{width:50px}
+    /* footer wayfinding bar collides with the bottom-bar chrome at this width; the
+       map-info card above already carries the slide's context on mobile */
+    .map-footer{display:none}
     /* On mobile the tooltip becomes a fixed bottom drawer */
     .map-tooltip{
       position:fixed;
@@ -1406,7 +1414,7 @@
     .tip-video{max-height:38vh}
 
     /* -- 15 contact / end -- */
-    .s-end{padding:80px 24px}
+    .s-end{padding:24px 24px 80px;margin-top:56px;height:calc(100vh - 56px)}
     .s-end::before{inset:18px}
     .s-end h2{font-size:clamp(42px,13vw,78px)}
     .s-end .lede{font-size:15px;margin-bottom:30px}
@@ -1420,7 +1428,6 @@
     .s-intro .left{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
     .s-role{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
     .s-case .info{
-      padding-bottom:calc(80px + env(safe-area-inset-bottom,0px));
       -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;
     }
     .s-quote{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
@@ -1454,13 +1461,12 @@
     <section class="slide s-intro" data-screen-label="01 Intro" data-title="Intro">
       <div class="left">
         <div class="pad">
-          <span class="eyebrow">Portfolio · 2014 — 2026</span>
           <h1 class="display">Hi, I'm<br/><em>Eric.</em></h1>
           <p class="lede">A creatively-driven tech enthusiast, perpetual designer, and app developer based in <strong>New York</strong>. I make things that bring people and ideas together — from iOS at scale, to game art and worldbuilding on the side.</p>
           <div class="meta">
             <div>
               <span class="mono k">Discipline</span>
-              <span class="v">iOS · Design · Game Art</span>
+              <span class="v">iOS · Design · Games & Technology</span>
             </div>
             <div>
               <span class="mono k">Currently</span>
@@ -1474,29 +1480,25 @@
           <img class="photo" src="assets/erk.png" alt="Eric Burger — portrait at Horseshoe Bend"/>
           <div class="caption">
             <span class="label">Eric Burger · 2026</span>
-            <span class="sub">N · 36.8791°  W · 111.5104°</span>
           </div>
         </div>
         <div class="corner-marks"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
-        <div class="side-idx">N · 40.7128°  W · 74.0060°</div>
       </div>
     </section>
 
     <!-- 02 ROLE OVERVIEW -->
     <section class="slide s-role" data-screen-label="02 iOS Developer" data-title="iOS Developer">
       <div class="col-l">
-        <span class="eyebrow">Chapter I · The Day Job</span>
         <h2 class="display">iOS<br/><em>Developer.</em></h2>
         <p class="lede">A decade of building award-winning applications and software solutions for Fortune 500 companies — specialising in iOS and Apple's development ecosystem.</p>
         <div class="stack">
           <span class="chip gold">Swift</span>
           <span class="chip gold">SwiftUI</span>
           <span class="chip">UIKit</span>
-          <span class="chip">Combine</span>
-          <span class="chip">Async / Await</span>
+          <span class="chip">Structured Concurrency</span>
           <span class="chip">AVFoundation</span>
-          <span class="chip">XCTest</span>
-          <span class="chip">MVVM</span>
+          <span class="chip">Swift Testing</span>
+          <span class="chip">MVVM-C</span>
         </div>
       </div>
       <div class="col-r">
@@ -1519,7 +1521,6 @@
     <!-- 03 E*TRADE -->
     <section class="slide s-case" data-screen-label="03 E*TRADE" data-title="E*TRADE">
       <div class="info">
-        <span class="eyebrow">Case Study · 01 of 03</span>
         <div class="row" style="margin-top:18px">
           <span class="role-tag">Tech Lead · iOS</span>
           <span class="role-tag" style="color:var(--gold)">2021 — Present</span>
@@ -1534,8 +1535,8 @@
         </ul>
         <div class="case-meta">
           <div><div class="k">Stack</div><div class="v">Swift · SwiftUI</div></div>
-          <div><div class="k">Team</div><div class="v">12+ engineers</div></div>
-          <div><div class="k">Reach</div><div class="v">Millions DAU</div></div>
+          <div><div class="k">Team</div><div class="v">Platform Squad Lead</div></div>
+          <div><div class="k">Reach</div><div class="v">Millions of daily active users</div></div>
         </div>
       </div>
       <div class="visual" style="--bg-a:#1a1530; --bg-b:#050810">
@@ -1546,7 +1547,6 @@
             <div class="caption">Trade · Invest · Save</div>
           </div>
         </div>
-        <div class="stamp">FIG. 01 · iOS APP</div>
         <div class="corner"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
       </div>
     </section>
@@ -1569,7 +1569,6 @@
     <!-- 05 REDBOX -->
     <section class="slide s-case" data-screen-label="05 Redbox" data-title="Redbox">
       <div class="info">
-        <span class="eyebrow">Case Study · 02 of 03</span>
         <div class="row" style="margin-top:18px">
           <span class="role-tag">Senior iOS Engineer</span>
           <span class="role-tag" style="color:var(--gold)">2018 — 2021</span>
@@ -1595,7 +1594,6 @@
             <div class="caption">Stream · Rent · Live</div>
           </div>
         </div>
-        <div class="stamp">FIG. 02 · STREAMING</div>
         <div class="corner"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
       </div>
     </section>
@@ -1618,7 +1616,6 @@
     <!-- 07 ALLSTATE -->
     <section class="slide s-case" data-screen-label="07 Allstate" data-title="Allstate">
       <div class="info">
-        <span class="eyebrow">Case Study · 03 of 03</span>
         <div class="row" style="margin-top:18px">
           <span class="role-tag">iOS Engineer</span>
           <span class="role-tag" style="color:var(--gold)">2014 — 2018</span>
@@ -1644,7 +1641,6 @@
             <div class="caption">Trip · Telematics</div>
           </div>
         </div>
-        <div class="stamp">FIG. 03 · TELEMATICS</div>
         <div class="corner"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
       </div>
     </section>
@@ -1669,19 +1665,17 @@
       <div class="text">
         <span class="eyebrow">Chapter III · After Hours</span>
         <h2>When the<br/>compiler<br/><em>goes quiet.</em></h2>
-        <p class="body">When I'm not shipping iOS, I'm probably drawing or spinning up other projects. I keep a small bestiary of hand-drawn monsters, icons, and totems — drawn for a series of personal game prototypes.</p>
+        <p class="body">When I'm not shipping for iOS, I'm probably drawing or spinning up other projects.</p>
       </div>
       <div class="anubis-stage">
         <img class="anubis" src="assets/Untitled_Artwork 5.gif" alt="Animated chest illustration" loading="lazy" style="height:80%; filter:drop-shadow(0 30px 40px rgba(0,0,0,.5)) drop-shadow(0 0 60px rgba(232,184,107,.15))"/>
         <div class="glyph-marks"></div>
       </div>
-      <div class="side-idx" style="color:var(--gold); opacity:.7">PERSONAL · ERIC BURGER</div>
     </section>
 
     <!-- 10 BESTIARY GRID — Eric's own B&W icons -->
     <section class="slide s-bestiary" data-screen-label="10 Bestiary" data-title="Bestiary">
       <div class="bst-left">
-        <span class="eyebrow">Plate I · Iconography</span>
         <h2><em>12 Hours of Monsters</em></h2>
         <div class="bst-video">
           <video autoplay muted loop playsinline>
@@ -1711,25 +1705,20 @@
       <div class="monsters-sun"><img src="assets/sun-full.png" alt="Sun — day phase"/></div>
       <div class="monsters-moon"><img src="assets/moon-full.png" alt="Moon — night phase"/></div>
       <div class="scene-vignette"></div>
-      <div class="scene-tag">After Hours · 12 Hours of Monsters</div>
       <div class="scene-game">
-        <span class="game-label">Interactive Demo · HTML5</span>
         <div class="game-embed-lazy" data-src="https://itch.io/embed-upload/17509584" data-allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share">
           <button class="play-btn" onclick="loadGame(this)">▶ Load Game</button>
         </div>
       </div>
       <div class="game-mobile-callout">
-        <span class="gmc-label">Interactive Demo · HTML5</span>
         <div class="gmc-title">12 Hours of Monsters</div>
         <a class="gmc-link" href="https://porchhouse.itch.io/12-hours-of-monsters" target="_blank" rel="noopener">Play on itch.io ↗</a>
         <p class="gmc-note">Best experienced on a larger screen</p>
       </div>
-      <div class="scale-rule"><span class="bar"></span><span>12 Hours of Monsters</span></div>
     </section>
 
     <!-- 13 DUNDRA INTRO — collaboration -->
     <section class="slide s-dundra-intro" data-screen-label="13 Dundra" data-title="Dundra">
-      <div class="corner-mark">Collaboration</div>
       <div class="text">
         <img class="dundra-logo" src="assets/logo.png" alt="Dundra logotype"/>
         <p><strong>Dundra</strong> is a small dungeon-crawl side project I've been engineering with a friend. I designed and programmed the game, and I collaborated with a partner who made the digital art and assets.</p>
@@ -1749,9 +1738,7 @@
     <section class="slide s-scene" data-screen-label="14 Dundra · Cave" data-title="Dundra · Cave">
       <div class="scene-bg" style="background-image:url('assets/cave.jpg')"></div>
       <div class="scene-vignette"></div>
-      <div class="scene-tag">Dundra · Environment 02</div>
       <div class="scene-game">
-        <span class="game-label">Interactive Demo · Unity WebGL</span>
         <div class="game-embed-lazy" data-src="https://itch.io/embed-upload/17493814" data-allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated; web-share">
           <button class="play-btn" onclick="loadGame(this)">▶ Load Game</button>
         </div>
@@ -1762,7 +1749,6 @@
         <a class="gmc-link" href="https://porchhouse.itch.io/dundra" target="_blank" rel="noopener">Play on itch.io ↗</a>
         <p class="gmc-note">Best experienced on a larger screen</p>
       </div>
-      <div class="scale-rule"><span class="bar"></span><span>Dundra</span></div>
     </section>
 
     <!-- 15 DUNDRA MAP -->
@@ -1829,7 +1815,6 @@
         <h2>Making&nbsp;<img class="map-info-logo" src="assets/logo.png" alt="Dundra"/></h2>
         <p>The journey of developing the game, from concept to demo. Final map and art assets created by my partner in development.</p>
       </div>
-      <div class="map-tag">Dundra · Creation Process</div>
 
       <div class="map-footer">
         <span>World Design · Steps 01 – 10</span>
